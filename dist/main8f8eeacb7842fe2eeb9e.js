@@ -47,12 +47,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
 // Imports
 
 
+
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/fonts/Unbounded-VariableFont_wght.ttf */ "./src/assets/fonts/Unbounded-VariableFont_wght.ttf"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#placement-modal {\n  display: grid;\n  height: 500px;\n  width: 500px;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n}\n\n.square {\n  border: 1px solid black;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,aAAA;EACA,aAAA;EACA,YAAA;EACA,8CAAA;EACA,uBAAA;AACJ;;AAEA;EACI,uBAAA;AACJ","sourcesContent":["#placement-modal    {\n    display: grid;\n    height: 500px;\n    width: 500px;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n}\n\n.square {\n    border: 1px solid black;\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n#starting-gameboard {\n  display: grid;\n  height: 500px;\n  width: 500px;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n}\n\n#start-modal {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(221, 218, 218);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-modal {\n  display: none;\n}\n\n#end-modal {\n  display: none;\n}\n\n.square {\n  border: 1px solid black;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAIA;EACI,aAAA;EACA,aAAA;EACA,YAAA;EACA,8CAAA;EACA,uBAAA;AAFJ;;AAKA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAFJ;;AAMA;EACI,aAAA;AAHJ;;AAMA;EACI,aAAA;AAHJ;;AAMA;EACI,uBAAA;AAHJ;;AAQA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AALJ;;AAQA;EACI,eAAA;AALJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n\n//  Modal \n#starting-gameboard   {\n    display: grid;\n    height: 500px;\n    width: 500px;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n}\n\n#start-modal    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(221, 218, 218);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n\n}\n\n#playing-modal   {\n    display: none;\n}\n\n#end-modal   {\n    display: none;\n}\n\n.square {\n    border: 1px solid black;\n}\n\n\n//  Button Elements\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n}\n\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -782,9 +787,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_body_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/body.scss */ "./src/styles/body.scss");
 
 
-var startModal = document.createElement("div").setAttribute("id", "start-modal");
-var gameboard = document.createElement("div").setAttribute("id", "gameboard");
-
+var gameboard = document.getElementsByClassName("gameboard");
 /*
 for(let a=0; a<100; a++) {
     let newSquare = document.createElement("div");
@@ -796,4 +799,4 @@ for(let a=0; a<100; a++) {
 
 /******/ })()
 ;
-//# sourceMappingURL=main5dc0b5120f0dacd9a6a1.js.map
+//# sourceMappingURL=main8f8eeacb7842fe2eeb9e.js.map

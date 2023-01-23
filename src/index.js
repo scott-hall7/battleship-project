@@ -1,9 +1,8 @@
 import './styles/modal.scss';
 import './styles/body.scss';
 
-let startModal = document.createElement("div").setAttribute("id", "start-modal");
-let gameboard = document.createElement("div").setAttribute("id", "gameboard");
 
+let gameboard = document.getElementsByClassName("gameboard")
 /*
 for(let a=0; a<100; a++) {
     let newSquare = document.createElement("div");

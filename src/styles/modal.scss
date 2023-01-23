@@ -1,4 +1,11 @@
-#placement-modal    {
+@font-face {
+    font-family: 'MyFont';
+    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');
+}
+
+
+//  Modal 
+#starting-gameboard   {
     display: grid;
     height: 500px;
     width: 500px;
@@ -6,6 +13,42 @@
     border: 1px solid black;
 }
 
+#start-modal    {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    background-color: rgb(221, 218, 218);
+    padding: 40px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 20px;
+
+}
+
+#playing-modal   {
+    display: none;
+}
+
+#end-modal   {
+    display: none;
+}
+
 .square {
     border: 1px solid black;
 }
+
+
+//  Button Elements
+.button {
+    font-size: 2rem;
+    color: white;
+    background-color: rgb(63, 60, 60);
+    border-radius: 20px;
+    border: none;
+    padding: 10px 20px;
+}
+
+.button:hover   {
+    cursor: pointer;
+}
+
