@@ -1,0 +1,11 @@
+#placement-modal    {
+    display: grid;
+    height: 500px;
+    width: 500px;
+    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+    border: 1px solid black;
+}
+
+.square {
+    border: 1px solid black;
+}

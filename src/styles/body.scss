@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'MyFont';
+    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+    font-size: 1.6rem;
+    margin: 0, auto;
+    margin-top: 30px;
+}
+
+header  {
+    font-size: 5rem;
+    font-family:'MyFont', 'Courier New', Courier, monospace;
+}
+
