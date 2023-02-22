@@ -3,38 +3,37 @@
     src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');
 }
 
-
-//  Modal 
-#starting-gameboard   {
+.gameboard  {
     display: grid;
-    height: 500px;
-    width: 500px;
     grid-template: repeat(10, 1fr) / repeat(10, 1fr);
     border: 1px solid black;
+    height: 400px;
+    width: 400px;
 }
+
+
+//  Modal 
 
 #start-modal    {
     display: flex;
     flex-direction: column;
     gap: 30px;
     align-items: center;
-    background-color: rgb(221, 218, 218);
+    background-color: rgb(218, 214, 207);
     padding: 40px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 20px;
-
 }
 
 #playing-modal   {
     display: none;
+    gap: 30px;
 }
+
+
 
 #end-modal   {
     display: none;
-}
-
-.square {
-    border: 1px solid black;
 }
 
 
@@ -50,5 +49,6 @@
 
 .button:hover   {
     cursor: pointer;
+    transform: scale(1.05);
 }
 
