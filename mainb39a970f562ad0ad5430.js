@@ -2,6 +2,132 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/js/factories/gameboard.js":
+/*!***************************************!*\
+  !*** ./src/js/factories/gameboard.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ship__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ship */ "./src/js/factories/ship.js");
+
+var Gameboard = function Gameboard(player) {
+  var gameboardName = player;
+  var grid = [];
+  var missedShots = [];
+  var initialize = function initialize() {
+    for (var i = 0; i < 10; i++) {
+      grid[i] = [];
+      missedShots[i] = [];
+      for (var j = 0; j < 10; j++) {
+        grid[i][j] = null;
+        missedShots[i][j] = false;
+      }
+    }
+  };
+  var placeShip = function placeShip(ship, row, column, isVertical) {
+    if (!checkCoordinate(ship, row, column, isVertical)) return false;
+    if (isVertical) {
+      for (var i = 0; i < ship.length; i++) {
+        grid[row + i][column] = ship;
+      }
+    } else {
+      for (var _i = 0; _i < ship.length; _i++) {
+        grid[row][column + _i] = ship;
+      }
+    }
+    return true;
+  };
+  var placeShipsRandomly = function placeShipsRandomly() {
+    var allShips = [];
+    var carrier = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(5, 'carrier');
+    var battleship = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(4, 'battleship');
+    var cruiser = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(3, 'cruiser');
+    var submarine = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(3, 'submarine');
+    var destroyer = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(2, 'destroyer');
+    allShips.push(carrier, battleship, cruiser, submarine, destroyer);
+    var successfulPlacements = 0;
+    while (successfulPlacements < 5) {
+      var row = Math.floor(Math.random() * 10);
+      var column = Math.floor(Math.random() * 10);
+      var isVertical = Math.random() < 0.5;
+      if (placeShip(allships[successfulPlacements], row, column, isVertical)) succesfulPlacements++;
+    }
+  };
+  var receiveAttack = function receiveAttack(coordinate) {};
+  var allSunk = function allSunk() {};
+
+  //  Helper functions
+  function checkCoordinate(ship, row, column, isVertical) {
+    //  Check within gameboard border
+    if (isVertical) {
+      if (row + ship.length > 9) return false;
+    } else {
+      if (column + ship.length > 9) return false;
+    }
+
+    //  Check is ship field is already taken
+    if (isVertical) {
+      for (var i = 0; i < ship.length; i++) {
+        if (grid[row + i][column] !== null) return false;
+      }
+    } else {
+      for (var _i2 = 0; _i2 < ship.length; _i2++) {
+        if (grid[row][column + _i2] !== null) return false;
+      }
+    }
+
+    //  Checks adjacent grid fields
+    if (isVertical) {} else {}
+  }
+  return {
+    gameboardName: gameboardName,
+    initialize: initialize,
+    placeShip: placeShip,
+    placeShipsRandomly: placeShipsRandomly,
+    receiveAttack: receiveAttack,
+    allSunk: allSunk,
+    shipStorage: shipStorage
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Gameboard);
+
+/***/ }),
+
+/***/ "./src/js/factories/ship.js":
+/*!**********************************!*\
+  !*** ./src/js/factories/ship.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var Ship = function Ship(l, name) {
+  var length = l;
+  var shipName = name;
+  var hits = 0;
+  var hit = function hit() {
+    hits += 1;
+  };
+  var isSunk = function isSunk() {
+    if (hits === length) return true;else return false;
+  };
+  return {
+    length: length,
+    shipName: shipName,
+    hit: hit,
+    isSunk: isSunk
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Ship);
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/body.scss":
 /*!***********************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/body.scss ***!
@@ -26,7 +152,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n*,\n*::before,\n*::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: inherit;\n}\n\nhtml {\n  font-size: 62.5%;\n}\n\nbody {\n  display: flex;\n  flex-direction: column;\n  gap: 50px;\n  align-items: center;\n  font-size: 1.6rem;\n  margin: 0, auto;\n  margin-top: 30px;\n}\n\nheader {\n  font-size: 5rem;\n  font-family: \"MyFont\", \"Courier New\", Courier, monospace;\n}", "",{"version":3,"sources":["webpack://./src/styles/body.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;;;EAGI,SAAA;EACA,UAAA;EACA,mBAAA;AAAJ;;AAGA;EACI,gBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,iBAAA;EACA,eAAA;EACA,gBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,wDAAA;AAAJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n*,\n*::before,\n*::after {\n    margin: 0;\n    padding: 0;\n    box-sizing: inherit;\n}\n\nhtml {\n    font-size: 62.5%;\n}\n\nbody {\n    display: flex;\n    flex-direction: column;\n    gap: 50px;\n    align-items: center;\n    font-size: 1.6rem;\n    margin: 0, auto;\n    margin-top: 30px;\n}\n\nheader  {\n    font-size: 5rem;\n    font-family:'MyFont', 'Courier New', Courier, monospace;\n}\n\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n*,\n*::before,\n*::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: inherit;\n}\n\nhtml {\n  font-size: 62.5%;\n}\n\nbody {\n  display: flex;\n  flex-direction: column;\n  gap: 50px;\n  align-items: center;\n  font-size: 1.6rem;\n  margin: 0, auto;\n  margin-top: 30px;\n}\n\nheader {\n  font-size: 5rem;\n  font-family: \"MyFont\", \"Courier New\", Courier, monospace;\n}\n\n.square {\n  border: 1px solid rgb(0, 0, 0);\n  background-color: #b8cde2;\n}", "",{"version":3,"sources":["webpack://./src/styles/body.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;;;EAGI,SAAA;EACA,UAAA;EACA,mBAAA;AAAJ;;AAGA;EACI,gBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,iBAAA;EACA,eAAA;EACA,gBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,wDAAA;AAAJ;;AAGA;EACI,8BAAA;EACA,yBAAA;AAAJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n*,\n*::before,\n*::after {\n    margin: 0;\n    padding: 0;\n    box-sizing: inherit;\n}\n\nhtml {\n    font-size: 62.5%;\n}\n\nbody {\n    display: flex;\n    flex-direction: column;\n    gap: 50px;\n    align-items: center;\n    font-size: 1.6rem;\n    margin: 0, auto;\n    margin-top: 30px;\n}\n\nheader  {\n    font-size: 5rem;\n    font-family:'MyFont', 'Courier New', Courier, monospace;\n}\n\n.square {\n    border: 1px solid rgb(0, 0, 0);\n    background-color: #b8cde2;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -57,7 +183,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n#starting-gameboard {\n  display: grid;\n  height: 500px;\n  width: 500px;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n}\n\n#start-modal {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(221, 218, 218);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-modal {\n  display: none;\n}\n\n#end-modal {\n  display: none;\n}\n\n.square {\n  border: 1px solid black;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAIA;EACI,aAAA;EACA,aAAA;EACA,YAAA;EACA,8CAAA;EACA,uBAAA;AAFJ;;AAKA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAFJ;;AAMA;EACI,aAAA;AAHJ;;AAMA;EACI,aAAA;AAHJ;;AAMA;EACI,uBAAA;AAHJ;;AAQA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AALJ;;AAQA;EACI,eAAA;AALJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n\n//  Modal \n#starting-gameboard   {\n    display: grid;\n    height: 500px;\n    width: 500px;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n}\n\n#start-modal    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(221, 218, 218);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n\n}\n\n#playing-modal   {\n    display: none;\n}\n\n#end-modal   {\n    display: none;\n}\n\n.square {\n    border: 1px solid black;\n}\n\n\n//  Button Elements\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n}\n\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#start-modal {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-modal {\n  display: none;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAMA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAHJ;;AAMA;EACI,aAAA;EACA,SAAA;AAHJ;;AAQA;EACI,aAAA;AALJ;;AAUA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AAPJ;;AAUA;EACI,eAAA;EACA,sBAAA;AAPJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n\n//  Modal \n\n#start-modal    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n#playing-modal   {\n    display: none;\n    gap: 30px;\n}\n\n\n\n#end-modal   {\n    display: none;\n}\n\n\n//  Button Elements\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -785,18 +911,41 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_modal_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/modal.scss */ "./src/styles/modal.scss");
 /* harmony import */ var _styles_body_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/body.scss */ "./src/styles/body.scss");
+/* harmony import */ var _js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/factories/gameboard */ "./src/js/factories/gameboard.js");
+/* harmony import */ var _js_factories_ship__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/factories/ship */ "./src/js/factories/ship.js");
 
 
-var gameboard = document.getElementsByClassName("gameboard");
-/*
-for(let a=0; a<100; a++) {
-    let newSquare = document.createElement("div");
-    newSquare.classList.add("square")
-    gameboard.appendChild(newSquare);
+
+
+
+//On Load
+//const player1 = Player('Scott');
+//const computer = Player('Computer');
+
+var gameboard = document.getElementById("starting-gameboard");
+var playerGameboard = document.getElementById("player-gameboard");
+var computerGameboard = document.getElementById("computer-gameboard");
+
+//  Dom Elements
+var startButton = document.getElementById("start-button");
+startButton.addEventListener("click", startGame);
+function startGame() {
+  document.getElementById("start-modal").style.display = "none";
+  document.getElementById("playing-modal").style.display = "flex";
 }
-*/
+for (var x = 1; x <= 10; x++) {
+  for (var y = 1; y <= 10; y++) {
+    var newSquare = document.createElement("div");
+    newSquare.classList.add("square");
+    newSquare.dataset.x = x;
+    newSquare.dataset.y = y;
+    gameboard.appendChild(newSquare);
+  }
+}
+var player1Gameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])('player');
+player1Gameboard.placeShipsRandomly();
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main8f8eeacb7842fe2eeb9e.js.map
+//# sourceMappingURL=mainb39a970f562ad0ad5430.js.map
