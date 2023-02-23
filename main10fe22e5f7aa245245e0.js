@@ -42,23 +42,34 @@ var Gameboard = function Gameboard(player) {
     return true;
   };
   var placeShipsRandomly = function placeShipsRandomly() {
-    var allShips = [];
-    var carrier = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(5, 'carrier');
-    var battleship = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(4, 'battleship');
-    var cruiser = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(3, 'cruiser');
-    var submarine = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(3, 'submarine');
-    var destroyer = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(2, 'destroyer');
-    allShips.push(carrier, battleship, cruiser, submarine, destroyer);
+    var ships = [];
+    var carrier = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(5);
+    var battleship = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(4);
+    var cruiser = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(3);
+    var submarine = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(3);
+    var destroyer = (0,_ship__WEBPACK_IMPORTED_MODULE_0__["default"])(2);
+    ships.push(carrier, battleship, cruiser, submarine, destroyer);
     var successfulPlacements = 0;
     while (successfulPlacements < 5) {
       var row = Math.floor(Math.random() * 10);
       var column = Math.floor(Math.random() * 10);
       var isVertical = Math.random() < 0.5;
-      if (placeShip(allships[successfulPlacements], row, column, isVertical)) succesfulPlacements++;
+      if (placeShip(ships[successfulPlacements], row, column, isVertical)) successfulPlacements++;
     }
   };
-  var receiveAttack = function receiveAttack(coordinate) {};
-  var allSunk = function allSunk() {};
+  var receiveAttack = function receiveAttack(row, column) {
+    if (grid[row][column]) grid[row][column].hit();else missedShots[row][column] = true;
+  };
+  var allSunk = function allSunk() {
+    for (var i = 0; i < 10; i++) {
+      for (var j = 0; j < 10; j++) {
+        if (grid[i][j]) {
+          if (grid[i][j].isSunk() === false) return false;
+        }
+      }
+    }
+    return true;
+  };
 
   //  Helper functions
   function checkCoordinate(ship, row, column, isVertical) {
@@ -81,16 +92,38 @@ var Gameboard = function Gameboard(player) {
     }
 
     //  Checks adjacent grid fields
-    if (isVertical) {} else {}
+    if (isVertical) {
+      for (var _i3 = 0; _i3 < ship.length; _i3++) {
+        for (var xTest = -1; xTest <= 1; xTest++) {
+          for (var yTest = -1; yTest <= 1; yTest++) {
+            if (row + xTest + _i3 < 0 || row + xTest + _i3 > 9 || column + yTest < 0 || column + yTest > 9) continue;
+            if (grid[row + xTest + _i3][column + yTest] === ship) continue;
+            if (grid[row + xTest + _i3][column + yTest] != null) return false;
+          }
+        }
+      }
+    } else {
+      for (var _i4 = 0; _i4 < ship.length; _i4++) {
+        for (var _yTest = -1; _yTest <= 1; _yTest++) {
+          for (var _xTest = -1; _xTest <= 1; _xTest++) {
+            if (row + _xTest < 0 || row + _xTest > 9 || column + _yTest + _i4 < 0 || column + _yTest + _i4 > 9) continue;
+            if (grid[row + _xTest][column + _yTest + _i4] === ship) continue;
+            if (grid[row + _xTest][column + _yTest + _i4] != null) return false;
+          }
+        }
+      }
+    }
+    return true;
   }
   return {
     gameboardName: gameboardName,
+    grid: grid,
+    missedShots: missedShots,
     initialize: initialize,
     placeShip: placeShip,
     placeShipsRandomly: placeShipsRandomly,
     receiveAttack: receiveAttack,
-    allSunk: allSunk,
-    shipStorage: shipStorage
+    allSunk: allSunk
   };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Gameboard);
@@ -107,19 +140,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-var Ship = function Ship(l, name) {
+var Ship = function Ship(l) {
   var length = l;
-  var shipName = name;
   var hits = 0;
   var hit = function hit() {
     hits += 1;
   };
   var isSunk = function isSunk() {
-    if (hits === length) return true;else return false;
+    if (hits === length) return true;
+    return false;
   };
   return {
     length: length,
-    shipName: shipName,
+    hits: hits,
     hit: hit,
     isSunk: isSunk
   };
@@ -943,9 +976,11 @@ for (var x = 1; x <= 10; x++) {
   }
 }
 var player1Gameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])('player');
+player1Gameboard.initialize();
 player1Gameboard.placeShipsRandomly();
+console.log(player1Gameboard.grid);
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=mainb39a970f562ad0ad5430.js.map
+//# sourceMappingURL=main10fe22e5f7aa245245e0.js.map
