@@ -36,7 +36,9 @@ for(let x = 1; x <= 10; x++) {
 
 
 const player1Gameboard = Gameboard('player')
+player1Gameboard.initialize();
 player1Gameboard.placeShipsRandomly();
+console.log(player1Gameboard.grid)
 
 
 

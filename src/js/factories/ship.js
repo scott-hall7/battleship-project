@@ -1,12 +1,11 @@
-const Ship = (l, name) => {
+const Ship = (l) => {
 
     const length = l;
-    const shipName = name;
 
     let hits = 0;
 
     const hit = () =>  {
-        hits += 1;
+        hits++;
     }
 
     const isSunk = () => {
@@ -14,7 +13,7 @@ const Ship = (l, name) => {
         return false;
     }
 
-    return {length, shipName, hit, isSunk}
+    return {length, hits, hit, isSunk}
 }
 
 export default Ship;

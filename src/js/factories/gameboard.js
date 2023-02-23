@@ -8,11 +8,11 @@ const Gameboard = (player) => {
 
     const initialize = () =>    {
         for (let i = 0; i < 10; i++) {
-            grid[i] = []
-            missedShots[i] = []
+            grid[i] = [];
+            missedShots[i] = [];
             for (let j = 0; j < 10; j++) {
-                grid[i][j] = null
-                missedShots[i][j] = false
+                grid[i][j] = null;
+                missedShots[i][j] = false;
             }
         }
     }
@@ -33,13 +33,13 @@ const Gameboard = (player) => {
     }
 
     const placeShipsRandomly = () => {
-        const allShips = [];
-        const carrier = Ship(5, 'carrier');
-        const battleship = Ship(4, 'battleship');
-        const cruiser = Ship(3, 'cruiser');
-        const submarine = Ship(3, 'submarine');
-        const destroyer = Ship(2, 'destroyer');
-        allShips.push(carrier, battleship, cruiser, submarine, destroyer)
+        const ships = [];
+        const carrier = Ship(5);
+        const battleship = Ship(4);
+        const cruiser = Ship(3);
+        const submarine = Ship(3);
+        const destroyer = Ship(2);
+        ships.push(carrier, battleship, cruiser, submarine, destroyer)
 
         let successfulPlacements = 0;
 
@@ -48,10 +48,9 @@ const Gameboard = (player) => {
             const column = Math.floor(Math.random() * 10);
             let isVertical = Math.random() < 0.5;
 
-            if(placeShip(allships[successfulPlacements], row, column, isVertical)) succesfulPlacements++;
+            if(placeShip(ships[successfulPlacements], row, column, isVertical)) successfulPlacements++;
         }
 
-        
     }
 
     const receiveAttack = (row, column) =>   {
@@ -96,6 +95,7 @@ const Gameboard = (player) => {
             for(let i = 0; i < ship.length; i++){
                 for(let xTest = -1; xTest <= 1; xTest++){
                     for(let yTest = -1; yTest <= 1; yTest++){
+                        if(row + xTest + i < 0 || row + xTest + i > 9 || column + yTest < 0 || column + yTest > 9) continue;
                         if(grid[row + xTest + i][column + yTest] === ship) continue;
                         if(grid[row + xTest + i][column + yTest] != null) return false;
                     }
@@ -105,7 +105,7 @@ const Gameboard = (player) => {
             for(let i = 0; i < ship.length; i++){
                 for(let yTest = -1; yTest <= 1; yTest++){
                     for(let xTest = -1; xTest <= 1; xTest++){
-                        
+                        if(row + xTest < 0 || row + xTest > 9 || column + yTest + i < 0 || column + yTest + i > 9) continue;
                         if(grid[row + xTest][column + yTest + i] === ship) continue;
                         if(grid[row + xTest][column + yTest + i] != null) return false;
                     }
@@ -115,7 +115,7 @@ const Gameboard = (player) => {
         return true;
     }
 
-    return {gameboardName, initialize, placeShip, placeShipsRandomly, receiveAttack, allSunk}
+    return {gameboardName, grid, missedShots, initialize, placeShip, placeShipsRandomly, receiveAttack, allSunk}
 }
 
 export default Gameboard;
