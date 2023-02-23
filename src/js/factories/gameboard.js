@@ -15,7 +15,6 @@ const Gameboard = (player) => {
                 missedShots[i][j] = false
             }
         }
-  
     }
 
     const placeShip = (ship, row, column, isVertical) =>    {
@@ -55,12 +54,20 @@ const Gameboard = (player) => {
         
     }
 
-    const receiveAttack = (coordinate) =>   {
-        
+    const receiveAttack = (row, column) =>   {
+        if(grid[row][column]) grid[row][column].hit();
+        else missedShots[row][column] = true;
     }
 
     const allSunk = () =>   {
-
+        for (let i = 0; i < 10; i++)    {
+            for(let j = 0; j < 10; j++) {
+                if(grid[i][j])  {
+                    if(grid[i][j].isSunk() === false) return false;
+                }
+            }
+        }
+        return true;
     }
 
     //  Helper functions
@@ -85,14 +92,30 @@ const Gameboard = (player) => {
         }
 
         //  Checks adjacent grid fields
-        if (isVertical){
-            
+        if(isVertical) {
+            for(let i = 0; i < ship.length; i++){
+                for(let xTest = -1; xTest <= 1; xTest++){
+                    for(let yTest = -1; yTest <= 1; yTest++){
+                        if(grid[row + xTest + i][column + yTest] === ship) continue;
+                        if(grid[row + xTest + i][column + yTest] != null) return false;
+                    }
+                }
+            }
         } else {
-
+            for(let i = 0; i < ship.length; i++){
+                for(let yTest = -1; yTest <= 1; yTest++){
+                    for(let xTest = -1; xTest <= 1; xTest++){
+                        
+                        if(grid[row + xTest][column + yTest + i] === ship) continue;
+                        if(grid[row + xTest][column + yTest + i] != null) return false;
+                    }
+                }
+            }
         }
+        return true;
     }
 
-    return {gameboardName, initialize, placeShip, placeShipsRandomly, receiveAttack, allSunk, shipStorage}
+    return {gameboardName, initialize, placeShip, placeShipsRandomly, receiveAttack, allSunk}
 }
 
 export default Gameboard;

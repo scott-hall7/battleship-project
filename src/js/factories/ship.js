@@ -11,7 +11,7 @@ const Ship = (l, name) => {
 
     const isSunk = () => {
         if (hits === length) return true;
-        else return false;
+        return false;
     }
 
     return {length, shipName, hit, isSunk}
