@@ -130,6 +130,53 @@ var Gameboard = function Gameboard(player) {
 
 /***/ }),
 
+/***/ "./src/js/factories/player.js":
+/*!************************************!*\
+  !*** ./src/js/factories/player.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _gameboard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./gameboard */ "./src/js/factories/gameboard.js");
+
+var Player = function Player(playerName) {
+  var name = playerName;
+  var attackedCoordinates = [];
+  var attackEnemy = function attackEnemy(row, column, gameboard) {
+    if (hasAttacked(row, column)) return;
+    attackedCoordinates.push([row, column]);
+    gameboard.receiveAttack(row, column);
+  };
+  var randomAttack = function randomAttack(gameboard) {
+    var rowAttack = Math.floor(Math.random() * 10);
+    var columnAttack = Math.floor(Math.random() * 10);
+    while (hasAttacked(rowAttack, columnAttack)) {
+      rowAttack = Math.floor(Math.random() * 10);
+      columnAttack = Math.floor(Math.random() * 10);
+    }
+    attackEnemy(rowAttack, columnAttack, gameboard);
+  };
+  var hasAttacked = function hasAttacked(row, column) {
+    for (var i = 0; i < attackedCoordinates.length; i++) {
+      if (attackedCoordinates[i][0] === row && attackedCoordinates[i][1] === column) return true;
+    }
+    return false;
+  };
+  return {
+    name: name,
+    attackedCoordinates: attackedCoordinates,
+    attackEnemy: attackEnemy,
+    randomAttack: randomAttack,
+    hasAttacked: hasAttacked
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Player);
+
+/***/ }),
+
 /***/ "./src/js/factories/ship.js":
 /*!**********************************!*\
   !*** ./src/js/factories/ship.js ***!
@@ -144,7 +191,7 @@ var Ship = function Ship(l) {
   var length = l;
   var hits = 0;
   var hit = function hit() {
-    hits += 1;
+    hits++;
   };
   var isSunk = function isSunk() {
     if (hits === length) return true;
@@ -185,7 +232,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n*,\n*::before,\n*::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: inherit;\n}\n\nhtml {\n  font-size: 62.5%;\n}\n\nbody {\n  display: flex;\n  flex-direction: column;\n  gap: 50px;\n  align-items: center;\n  font-size: 1.6rem;\n  margin: 0, auto;\n  margin-top: 30px;\n}\n\nheader {\n  font-size: 5rem;\n  font-family: \"MyFont\", \"Courier New\", Courier, monospace;\n}\n\n.square {\n  border: 1px solid rgb(0, 0, 0);\n  background-color: #b8cde2;\n}", "",{"version":3,"sources":["webpack://./src/styles/body.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;;;EAGI,SAAA;EACA,UAAA;EACA,mBAAA;AAAJ;;AAGA;EACI,gBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,iBAAA;EACA,eAAA;EACA,gBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,wDAAA;AAAJ;;AAGA;EACI,8BAAA;EACA,yBAAA;AAAJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n*,\n*::before,\n*::after {\n    margin: 0;\n    padding: 0;\n    box-sizing: inherit;\n}\n\nhtml {\n    font-size: 62.5%;\n}\n\nbody {\n    display: flex;\n    flex-direction: column;\n    gap: 50px;\n    align-items: center;\n    font-size: 1.6rem;\n    margin: 0, auto;\n    margin-top: 30px;\n}\n\nheader  {\n    font-size: 5rem;\n    font-family:'MyFont', 'Courier New', Courier, monospace;\n}\n\n.square {\n    border: 1px solid rgb(0, 0, 0);\n    background-color: #b8cde2;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n*,\n*::before,\n*::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: inherit;\n}\n\nhtml {\n  font-size: 62.5%;\n}\n\nbody {\n  display: flex;\n  flex-direction: column;\n  gap: 50px;\n  align-items: center;\n  font-size: 1.6rem;\n  margin: 0, auto;\n  margin-top: 30px;\n}\n\nheader {\n  font-size: 5rem;\n  font-family: \"MyFont\", \"Courier New\", Courier, monospace;\n}\n\n.square {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-size: 20px;\n  border: 1px solid rgb(0, 0, 0);\n  background-color: #c3d2e0;\n}\n\n.occupied {\n  background-color: grey;\n}", "",{"version":3,"sources":["webpack://./src/styles/body.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;;;EAGI,SAAA;EACA,UAAA;EACA,mBAAA;AAAJ;;AAGA;EACI,gBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,iBAAA;EACA,eAAA;EACA,gBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,wDAAA;AAAJ;;AAGA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,eAAA;EACA,8BAAA;EACA,yBAAA;AAAJ;;AAGA;EACI,sBAAA;AAAJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n*,\n*::before,\n*::after {\n    margin: 0;\n    padding: 0;\n    box-sizing: inherit;\n}\n\nhtml {\n    font-size: 62.5%;\n}\n\nbody {\n    display: flex;\n    flex-direction: column;\n    gap: 50px;\n    align-items: center;\n    font-size: 1.6rem;\n    margin: 0, auto;\n    margin-top: 30px;\n}\n\nheader  {\n    font-size: 5rem;\n    font-family:'MyFont', 'Courier New', Courier, monospace;\n}\n\n.square {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 20px;\n    border: 1px solid rgb(0, 0, 0);\n    background-color: #c3d2e0;\n}\n\n.occupied  {\n    background-color: grey;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -216,7 +263,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#start-modal {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-modal {\n  display: none;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAMA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAHJ;;AAMA;EACI,aAAA;EACA,SAAA;AAHJ;;AAQA;EACI,aAAA;AALJ;;AAUA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AAPJ;;AAUA;EACI,eAAA;EACA,sBAAA;AAPJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n\n//  Modal \n\n#start-modal    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n#playing-modal   {\n    display: none;\n    gap: 30px;\n}\n\n\n\n#end-modal   {\n    display: none;\n}\n\n\n//  Button Elements\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#starting-gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#computer-gameboard .square:hover {\n  cursor: pointer;\n}\n\n#start-screen {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-screen {\n  display: none;\n  justify-content: center;\n  align-items: center;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n  position: fixed;\n  align-items: center;\n  justify-content: center;\n  font-size: 45px;\n}\n\n.starting-buttons {\n  display: flex;\n  justify-content: space-evenly;\n  width: 100%;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}\n\n.ship {\n  position: absolute;\n  background-color: grey;\n  z-index: 99;\n  box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover {\n  cursor: pointer;\n}\n\n#carrier {\n  width: 200px;\n  height: 40px;\n}\n\n#battleship {\n  width: 160px;\n  height: 40px;\n}\n\n#destroyer {\n  width: 120px;\n  height: 40px;\n}\n\n#submarine {\n  width: 120px;\n  height: 40px;\n}\n\n#patrolboat {\n  width: 80px;\n  height: 40px;\n}\n\n.missed-shot {\n  background-color: rgb(164, 199, 164) !important;\n}\n\n.hit-shot {\n  background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n  pointer-events: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAKA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAFJ;;AAKA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,SAAA;AAFJ;;AAOA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;EACA,eAAA;EACA,mBAAA;EACA,uBAAA;EACA,eAAA;AAJJ;;AASA;EACI,aAAA;EACA,6BAAA;EACA,WAAA;AANJ;;AASA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AANJ;;AASA;EACI,eAAA;EACA,sBAAA;AANJ;;AASA;EACI,kBAAA;EACA,sBAAA;EACA,WAAA;EACA,+BAAA;AANJ;;AASA;EACI,eAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,WAAA;EACA,YAAA;AANJ;;AASA;EACI,+CAAA;AANJ;;AASA;EACI,+CAAA;AANJ;;AASA;EACI,oBAAA;AANJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#starting-gameboard {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#computer-gameboard .square:hover {\n    cursor: pointer;\n}\n\n\n//  Modal \n#start-screen    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n#playing-screen   {\n    display: none;\n    justify-content: center;\n    align-items: center;\n    gap: 30px;\n}\n\n\n\n#end-modal   {\n    display: none;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n    position: fixed;\n    align-items: center;\n    justify-content: center;\n    font-size: 45px;\n}\n\n\n//  Button Elements\n.starting-buttons {\n    display: flex;\n    justify-content: space-evenly;\n    width: 100%;\n}\n\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n.ship   {\n    position: absolute;\n    background-color: grey;\n    z-index: 99;\n    box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover{\n    cursor: pointer;\n}\n\n#carrier    {\n    width: 200px;\n    height: 40px;\n}\n\n#battleship   {\n    width: 160px;\n    height: 40px;\n}\n\n#destroyer   {\n    width: 120px;\n    height: 40px;\n}\n\n#submarine   {\n    width: 120px;\n    height: 40px;\n}\n\n#patrolboat   {\n    width: 80px;\n    height: 40px;\n}\n\n.missed-shot    {\n    background-color: rgb(164, 199, 164) !important;\n}\n\n.hit-shot   {\n    background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n    pointer-events: none;\n}\n\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -946,41 +993,153 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_body_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/body.scss */ "./src/styles/body.scss");
 /* harmony import */ var _js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/factories/gameboard */ "./src/js/factories/gameboard.js");
 /* harmony import */ var _js_factories_ship__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/factories/ship */ "./src/js/factories/ship.js");
+/* harmony import */ var _js_factories_player__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/factories/player */ "./src/js/factories/player.js");
 
 
 
 
 
-//On Load
-//const player1 = Player('Scott');
-//const computer = Player('Computer');
 
-var gameboard = document.getElementById("starting-gameboard");
-var playerGameboard = document.getElementById("player-gameboard");
-var computerGameboard = document.getElementById("computer-gameboard");
+//Start Screen Functions
+var playerStorage = [];
+var gameboardStorage = [];
+startScreenFunctions();
+function startScreenFunctions() {
+  var startScreen = document.getElementById('start-screen');
+  startScreen.style.display = "flex";
+  var startingGameboard = document.createElement('div');
+  startingGameboard.setAttribute("id", "starting-gameboard");
+  startScreen.appendChild(startingGameboard);
+  var startButton = document.getElementById('start-button');
+  startButton.addEventListener('click', beginGame);
+  loadPlayers();
+}
+function loadPlayers() {
+  var newPlayer = (0,_js_factories_player__WEBPACK_IMPORTED_MODULE_4__["default"])('Player');
+  var computerPlayer = (0,_js_factories_player__WEBPACK_IMPORTED_MODULE_4__["default"])('Computer');
+  playerStorage.push(newPlayer, computerPlayer);
+  loadGameboards(newPlayer, computerPlayer);
+}
+function loadGameboards(player, computer) {
+  var newPlayerGameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])("".concat(player.name));
+  var computerGameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])("".concat(computer.name));
+  newPlayerGameboard.initialize();
+  newPlayerGameboard.placeShipsRandomly();
+  computerGameboard.initialize();
+  computerGameboard.placeShipsRandomly();
+  gameboardStorage.push(newPlayerGameboard);
+  gameboardStorage.push(computerGameboard);
+  var startingGameboard = document.getElementById('starting-gameboard');
+  displayGameboard(newPlayerGameboard, startingGameboard);
+}
 
 //  Dom Elements
-var startButton = document.getElementById("start-button");
-startButton.addEventListener("click", startGame);
-function startGame() {
-  document.getElementById("start-modal").style.display = "none";
-  document.getElementById("playing-modal").style.display = "flex";
-}
-for (var x = 1; x <= 10; x++) {
-  for (var y = 1; y <= 10; y++) {
-    var newSquare = document.createElement("div");
-    newSquare.classList.add("square");
-    newSquare.dataset.x = x;
-    newSquare.dataset.y = y;
-    gameboard.appendChild(newSquare);
+function displayGameboard(gameboard, domGameboard) {
+  for (var row = 0; row < 10; row++) {
+    for (var column = 0; column < 10; column++) {
+      var newSquare = document.createElement('div');
+      newSquare.className = 'square';
+      newSquare.dataset.x = row;
+      newSquare.dataset.y = column;
+      if (gameboard.gameboardName === "Player" && gameboard.grid[row][column]) newSquare.classList.add('occupied');
+      domGameboard.appendChild(newSquare);
+    }
   }
 }
-var player1Gameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])('player');
-player1Gameboard.initialize();
-player1Gameboard.placeShipsRandomly();
-console.log(player1Gameboard.grid);
+function beginGame() {
+  var startScreen = document.getElementById('start-screen');
+  startScreen.style.display = "none";
+  var playingScreen = document.getElementById('playing-screen');
+  playingScreen.style.display = "flex";
+  loadPlayingGameboards();
+}
+
+//  Playing Screen Functions
+function loadPlayingGameboards() {
+  var gameboards = gameboardStorage;
+  var playerGameboard = document.getElementById('player-gameboard');
+  var computerGameboard = document.getElementById('computer-gameboard');
+  for (var i = 0; i < gameboards.length; i++) {
+    /*  !!! --- Updated below to switch */
+    if (gameboards[i].gameboardName === "Player") {
+      displayGameboard(gameboards[i], playerGameboard);
+    } else {
+      displayGameboard(gameboards[i], computerGameboard);
+      addClickFunction(gameboards[i], computerGameboard);
+    }
+  }
+}
+function addClickFunction(gameboard, domGameboard) {
+  var cells = domGameboard.querySelectorAll('.square');
+  cells.forEach(function (cell) {
+    cell.addEventListener('click', function (e) {
+      var row = e.target.getAttribute('data-x') * 1;
+      var column = e.target.getAttribute('data-y') * 1;
+      userAttack(playerStorage[0], row, column, gameboard);
+    });
+  });
+}
+function userAttack(playerUser, row, column, enemyGameboard) {
+  playerUser.attackEnemy(row, column, enemyGameboard);
+  checkIfWinner(playerUser, enemyGameboard);
+  randomComputerAttack(playerStorage[1], gameboardStorage[0]);
+}
+function randomComputerAttack(computerUser, enemyGameboard) {
+  computerUser.randomAttack(enemyGameboard);
+  checkIfWinner(computerUser, enemyGameboard);
+}
+function checkIfWinner(currentUser, enemyGameboard) {
+  if (enemyGameboard.allSunk()) {
+    endGameDisplay(currentUser);
+  } else updateGameboardDisplay(currentUser, enemyGameboard);
+}
+function updateGameboardDisplay(currentUser, enemyGameboard) {
+  var recentAttack = currentUser.attackedCoordinates[currentUser.attackedCoordinates.length - 1];
+  var row = recentAttack[0];
+  var column = recentAttack[1];
+  var playerGameboardCells = document.getElementById('player-gameboard').querySelectorAll('.square');
+  var computerGameboardCells = document.getElementById('computer-gameboard').querySelectorAll('.square');
+  var currentGameboardCells = currentUser.name === "Player" ? computerGameboardCells : playerGameboardCells;
+  currentGameboardCells.forEach(function (cell) {
+    var x = cell.getAttribute('data-x') * 1;
+    var y = cell.getAttribute('data-y') * 1;
+    if (x === row && y === column) {
+      if (enemyGameboard.grid[row][column]) cell.classList.add('hit-shot');else cell.classList.add('missed-shot');
+      return;
+    }
+  });
+}
+function endGameDisplay(winner) {
+  var endModal = document.getElementById('end-modal');
+  endModal.style.display = "flex";
+  var winningText = document.getElementById("winning-text");
+  winningText.textContent = "".concat(winner.name, " wins!");
+  var playingGameboards = document.querySelectorAll(".playing-gameboard");
+  playingGameboards.forEach(function (gameboard) {
+    gameboard.classList.add("disableCursor");
+  });
+  var resetButton = document.getElementById('reset-button');
+  resetButton.addEventListener('click', function () {
+    resetGame();
+    endModal.style.display = "none";
+    var playingScreen = document.getElementById('playing-screen');
+    playingScreen.style.display = "none";
+    playingGameboards.forEach(function (gameboard) {
+      gameboard.classList.remove("disableCursor");
+      gameboard.innerHTML = "";
+    });
+  });
+}
+function resetGame() {
+  playerStorage = [];
+  gameboardStorage = [];
+  var startingGameboard = document.getElementById('starting-gameboard');
+  startingGameboard.remove();
+  startScreenFunctions();
+  //
+}
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main10fe22e5f7aa245245e0.js.map
+//# sourceMappingURL=main393f071d45ece0fd576d.js.map
