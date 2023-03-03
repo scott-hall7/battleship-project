@@ -69,6 +69,7 @@ const Gameboard = (player) => {
         return true;
     }
 
+
     //  Helper functions
     function checkCoordinate(ship, row, column, isVertical)    {
 
