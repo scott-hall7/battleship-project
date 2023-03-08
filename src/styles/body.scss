@@ -42,3 +42,19 @@ header  {
 .occupied  {
     background-color: grey;
 }
+
+.occupied:hover {
+    cursor: pointer;
+}
+
+.locked-occupied    {
+    background-color: rgb(97, 96, 96);
+}
+
+.placement-hover    {
+    background-color: green;
+}
+
+.no-placement-hover {
+    background-color: red;
+}

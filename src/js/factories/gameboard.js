@@ -17,10 +17,10 @@ const Gameboard = (player) => {
         }
     }
 
-    const placeShip = (ship, row, column, isVertical) =>    {
-        if(!checkCoordinate(ship, row, column, isVertical)) return false;
+    const placeShip = (ship, row, column) =>    {
+        if(!checkCoordinate(ship, row, column, ship.isVertical)) return false;
 
-        if(isVertical){
+        if(ship.isVertical){
             for(let i = 0; i < ship.length; i++) {
                 grid[row + i][column] = ship;
             }
@@ -34,11 +34,11 @@ const Gameboard = (player) => {
 
     const placeShipsRandomly = () => {
         const ships = [];
-        const carrier = Ship(5);
-        const battleship = Ship(4);
-        const cruiser = Ship(3);
-        const submarine = Ship(3);
-        const destroyer = Ship(2);
+        const carrier = Ship(5, Math.random() < 0.5);
+        const battleship = Ship(4, Math.random() < 0.5);
+        const cruiser = Ship(3, Math.random() < 0.5);
+        const submarine = Ship(3, Math.random() < 0.5);
+        const destroyer = Ship(2, Math.random() < 0.5);
         ships.push(carrier, battleship, cruiser, submarine, destroyer)
 
         let successfulPlacements = 0;
@@ -46,9 +46,8 @@ const Gameboard = (player) => {
         while (successfulPlacements < 5){
             const row = Math.floor(Math.random() * 10);
             const column = Math.floor(Math.random() * 10);
-            let isVertical = Math.random() < 0.5;
 
-            if(placeShip(ships[successfulPlacements], row, column, isVertical)) successfulPlacements++;
+            if(placeShip(ships[successfulPlacements], row, column)) successfulPlacements++;
         }
 
     }
@@ -75,9 +74,9 @@ const Gameboard = (player) => {
 
         //  Check within gameboard border
         if (isVertical){
-            if(row + ship.length > 9) return false;
+            if(row + ship.length > 10) return false;
         } else {
-            if(column + ship.length > 9) return false;
+            if(column + ship.length > 10) return false;
         }
 
         //  Check is ship field is already taken
@@ -116,7 +115,7 @@ const Gameboard = (player) => {
         return true;
     }
 
-    return {gameboardName, grid, missedShots, initialize, placeShip, placeShipsRandomly, receiveAttack, allSunk}
+    return {gameboardName, grid, missedShots, initialize, placeShip, placeShipsRandomly, receiveAttack, checkCoordinate, allSunk}
 }
 
 export default Gameboard;

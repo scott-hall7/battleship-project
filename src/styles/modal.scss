@@ -68,6 +68,11 @@
     width: 100%;
 }
 
+#start-screen-buttons   {
+    display: flex;
+    gap: 30px;
+}
+
 .button {
     font-size: 2rem;
     color: white;
@@ -129,4 +134,3 @@
 .disableCursor {
     pointer-events: none;
 }
-

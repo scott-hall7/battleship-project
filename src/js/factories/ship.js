@@ -1,6 +1,7 @@
-const Ship = (l) => {
+const Ship = (l, vertical) => {
 
     const length = l;
+    let isVertical = vertical;
 
     let hits = 0;
 
@@ -13,7 +14,7 @@ const Ship = (l) => {
         return false;
     }
 
-    return {length, hits, hit, isSunk}
+    return {length, isVertical, hits, hit, isSunk}
 }
 
 export default Ship;
