@@ -125,6 +125,7 @@
 
 .missed-shot    {
     background-color: rgb(164, 199, 164) !important;
+    pointer-events: none;
 }
 
 .hit-shot   {

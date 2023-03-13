@@ -53,6 +53,7 @@ function loadGameboards(player, computer) {
 //  Dom Elements
 function displayGameboard(gameboard, domGameboard) {
     domGameboard.innerHTML = "";
+
     for(let row = 0; row < 10; row++) {
         for(let column = 0; column < 10; column++)  {
             let newSquare = document.createElement('div');
@@ -69,26 +70,24 @@ function displayGameboard(gameboard, domGameboard) {
                     newSquare.classList.add('locked-occupied');
                 }
             }
-            domGameboard.appendChild(newSquare)
+            domGameboard.appendChild(newSquare);
         }
     }
 }
 
 function findActiveShip(cell, gameboard, startingGameboard)    {
-  
     let row = cell.getAttribute('data-x')
     let column = cell.getAttribute('data-y')
     let activeShip = gameboard.grid[row][column];
     toggleRotateButton(activeShip);
-
 
     for(let i = 0; i < 10; i++) {
         for(let j = 0; j < 10; j++) {
             if(gameboard.grid[i][j] === activeShip) gameboard.grid[i][j] = null;
         }
     }
-    displayGameboard(gameboard, startingGameboard)
-    selectNewPosition(activeShip, gameboard)
+    displayGameboard(gameboard, startingGameboard);
+    selectNewPosition(activeShip, gameboard);
 }
 
 function selectNewPosition(activeShip, gameboard){
@@ -137,13 +136,14 @@ function selectNewPosition(activeShip, gameboard){
                 }
                 
             }
-        })
+        });
+
         cell.addEventListener('mouseout', () =>    {
             for(let i = 0; i < startingGameboardCells.length; i++)  {
                 startingGameboardCells[i].classList.remove('placement-hover')
                 startingGameboardCells[i].classList.remove('no-placement-hover')
             }
-        })
+        });
     }) 
 }
 
@@ -166,7 +166,6 @@ function toggleRotateButton(ship)   {
     startScreenButtons.appendChild(rotateButton);
 }
 
-
 function rotateCurrentShip(ship)    {
     ship.isVertical = !ship.isVertical;
 }
@@ -177,56 +176,87 @@ function beginGame()    {
 
     const playingScreen = document.getElementById('playing-screen')
     playingScreen.style.display = "flex";
-    loadPlayingGameboards();
+    
+    const game = gameloop();
+    game.loadPlayingGameboards();
 }
-
-
 
 //  Playing Screen Functions
-function loadPlayingGameboards()   {
-    const gameboards = gameboardStorage;
-    const playerGameboard = document.getElementById('player-gameboard')
-    const computerGameboard = document.getElementById('computer-gameboard')
-    
-    for(let i = 0; i < gameboards.length; i++)   {
-        /*  !!! --- Updated below to switch */
-        if(gameboards[i].gameboardName === "Player")    {
-            displayGameboard(gameboards[i], playerGameboard)
-        } else  {
-            displayGameboard(gameboards[i], computerGameboard)
-            addClickFunction(gameboards[i], computerGameboard)
+const gameloop = () =>  {
+    function loadPlayingGameboards()   {
+        const gameboards = gameboardStorage;
+        const playerGameboard = document.getElementById('player-gameboard')
+        const computerGameboard = document.getElementById('computer-gameboard')
+        
+        for(let i = 0; i < gameboards.length; i++)   {
+            if(gameboards[i].gameboardName === "Player")    {
+                displayGameboard(gameboards[i], playerGameboard)
+            } else  {
+                displayGameboard(gameboards[i], computerGameboard) 
+                addClickFunction(gameboards[i], computerGameboard)
+            }
         }
     }
-}
 
-function addClickFunction(gameboard, domGameboard)  {
-    const cells = domGameboard.querySelectorAll('.square');
-    cells.forEach(cell =>   {
-        cell.addEventListener('click', e => {
-            let row = e.target.getAttribute('data-x') * 1;
-            let column = e.target.getAttribute('data-y') * 1;
-            userAttack(playerStorage[0], row, column, gameboard)
+    function addClickFunction(gameboard, domGameboard)  {
+        const cells = domGameboard.querySelectorAll('.square');
+        cells.forEach(cell =>   {
+            cell.addEventListener('click', e => {
+                let row = e.target.getAttribute('data-x') * 1;
+                let column = e.target.getAttribute('data-y') * 1;
+                userAttack(playerStorage[0], row, column, gameboard)
+            })
         })
-    })
-}
-
-
-function userAttack(playerUser, row, column, enemyGameboard) {
-    playerUser.attackEnemy(row, column, enemyGameboard)
-    checkIfWinner(playerUser, enemyGameboard);
-    randomComputerAttack(playerStorage[1],gameboardStorage[0])
-}
-
-function randomComputerAttack(computerUser, enemyGameboard){
-    computerUser.randomAttack(enemyGameboard)
-    checkIfWinner(computerUser,enemyGameboard);
-}
-
-function checkIfWinner(currentUser, enemyGameboard)   {
-    if(enemyGameboard.allSunk()) {
-        endGameDisplay(currentUser)
     }
-    else updateGameboardDisplay(currentUser, enemyGameboard)
+
+    function userAttack(playerUser, row, column, enemyGameboard) {
+        playerUser.attackEnemy(row, column, enemyGameboard)
+        checkIfWinner(playerUser, enemyGameboard);
+        computerAttack(playerStorage[1], gameboardStorage[0])
+    }
+    
+    let nextComputerAttack = [];
+    function computerAttack(computerUser, enemyGameboard){
+        if(nextComputerAttack.length === 0) {
+            computerUser.randomAttack(enemyGameboard)
+            const lastAttack = computerUser.attackedCoordinates[computerUser.attackedCoordinates.length - 1];
+            const row = lastAttack[0]
+            const column = lastAttack[1]
+            if(enemyGameboard.grid[row][column])   {
+                let attackedShip = enemyGameboard.grid[lastAttack[0]][lastAttack[1]];
+                if(attackedShip.isVertical) {
+                    for(let i = ((attackedShip.length - 1) * -1); i < attackedShip.length; i++ )   {
+                        if (i != 0 && row + i < 10 && row + i > -1 && !computerUser.attackedCoordinates.includes([row + i, column])) nextComputerAttack.push([row + i, column])
+                    }
+                } else  {
+                    for(let i = ((attackedShip.length - 1) * -1); i < attackedShip.length; i++ )   {
+                        if (i != 0 && column + i < 10 && column + i > -1 && !computerUser.attackedCoordinates.includes([row, column + i])) nextComputerAttack.push([row, column + i])
+                    } 
+                }
+            }
+        } else  {
+            const nextAttack = nextComputerAttack.shift();
+            const nextAttackRow = nextAttack[0];
+            const nextAttackColumn = nextAttack[1];
+            computerUser.attackEnemy(nextAttackRow, nextAttackColumn, enemyGameboard);
+
+            if(enemyGameboard.grid[nextAttackRow][nextAttackColumn] && enemyGameboard.grid[nextAttackRow][nextAttackColumn].isSunk())   {
+                nextComputerAttack = [];
+            }  
+        }
+        checkIfWinner(computerUser,enemyGameboard);
+    }
+
+    function checkIfWinner(currentUser, enemyGameboard)   {
+        console.log(currentUser, enemyGameboard.name)
+        if(enemyGameboard.allSunk()) {
+            endGameDisplay(currentUser)
+        }
+        else updateGameboardDisplay(currentUser, enemyGameboard)
+    }
+
+
+    return {loadPlayingGameboards}
 }
 
 function updateGameboardDisplay(currentUser, enemyGameboard)  {
@@ -250,6 +280,10 @@ function updateGameboardDisplay(currentUser, enemyGameboard)  {
     })
 }
 
+
+
+
+//  End Game Modal
 function endGameDisplay(winner)    {
     const endModal = document.getElementById('end-modal')
     endModal.style.display = "flex";
