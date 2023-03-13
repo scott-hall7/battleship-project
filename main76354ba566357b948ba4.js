@@ -265,7 +265,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#starting-gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#computer-gameboard .square:hover {\n  cursor: pointer;\n}\n\n#start-screen {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-screen {\n  display: none;\n  justify-content: center;\n  align-items: center;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n  position: fixed;\n  align-items: center;\n  justify-content: center;\n  font-size: 45px;\n}\n\n.starting-buttons {\n  display: flex;\n  justify-content: space-evenly;\n  width: 100%;\n}\n\n#start-screen-buttons {\n  display: flex;\n  gap: 30px;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}\n\n.ship {\n  position: absolute;\n  background-color: grey;\n  z-index: 99;\n  box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover {\n  cursor: pointer;\n}\n\n#carrier {\n  width: 200px;\n  height: 40px;\n}\n\n#battleship {\n  width: 160px;\n  height: 40px;\n}\n\n#destroyer {\n  width: 120px;\n  height: 40px;\n}\n\n#submarine {\n  width: 120px;\n  height: 40px;\n}\n\n#patrolboat {\n  width: 80px;\n  height: 40px;\n}\n\n.missed-shot {\n  background-color: rgb(164, 199, 164) !important;\n}\n\n.hit-shot {\n  background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n  pointer-events: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAKA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAFJ;;AAKA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,SAAA;AAFJ;;AAOA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;EACA,eAAA;EACA,mBAAA;EACA,uBAAA;EACA,eAAA;AAJJ;;AASA;EACI,aAAA;EACA,6BAAA;EACA,WAAA;AANJ;;AASA;EACI,aAAA;EACA,SAAA;AANJ;;AASA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AANJ;;AASA;EACI,eAAA;EACA,sBAAA;AANJ;;AASA;EACI,kBAAA;EACA,sBAAA;EACA,WAAA;EACA,+BAAA;AANJ;;AASA;EACI,eAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,WAAA;EACA,YAAA;AANJ;;AASA;EACI,+CAAA;AANJ;;AASA;EACI,+CAAA;AANJ;;AASA;EACI,oBAAA;AANJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#starting-gameboard {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#computer-gameboard .square:hover {\n    cursor: pointer;\n}\n\n\n//  Modal \n#start-screen    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n#playing-screen   {\n    display: none;\n    justify-content: center;\n    align-items: center;\n    gap: 30px;\n}\n\n\n\n#end-modal   {\n    display: none;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n    position: fixed;\n    align-items: center;\n    justify-content: center;\n    font-size: 45px;\n}\n\n\n//  Button Elements\n.starting-buttons {\n    display: flex;\n    justify-content: space-evenly;\n    width: 100%;\n}\n\n#start-screen-buttons   {\n    display: flex;\n    gap: 30px;\n}\n\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n.ship   {\n    position: absolute;\n    background-color: grey;\n    z-index: 99;\n    box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover{\n    cursor: pointer;\n}\n\n#carrier    {\n    width: 200px;\n    height: 40px;\n}\n\n#battleship   {\n    width: 160px;\n    height: 40px;\n}\n\n#destroyer   {\n    width: 120px;\n    height: 40px;\n}\n\n#submarine   {\n    width: 120px;\n    height: 40px;\n}\n\n#patrolboat   {\n    width: 80px;\n    height: 40px;\n}\n\n.missed-shot    {\n    background-color: rgb(164, 199, 164) !important;\n}\n\n.hit-shot   {\n    background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n    pointer-events: none;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#starting-gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#computer-gameboard .square:hover {\n  cursor: pointer;\n}\n\n#start-screen {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-screen {\n  display: none;\n  justify-content: center;\n  align-items: center;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n  position: fixed;\n  align-items: center;\n  justify-content: center;\n  font-size: 45px;\n}\n\n.starting-buttons {\n  display: flex;\n  justify-content: space-evenly;\n  width: 100%;\n}\n\n#start-screen-buttons {\n  display: flex;\n  gap: 30px;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}\n\n.ship {\n  position: absolute;\n  background-color: grey;\n  z-index: 99;\n  box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover {\n  cursor: pointer;\n}\n\n#carrier {\n  width: 200px;\n  height: 40px;\n}\n\n#battleship {\n  width: 160px;\n  height: 40px;\n}\n\n#destroyer {\n  width: 120px;\n  height: 40px;\n}\n\n#submarine {\n  width: 120px;\n  height: 40px;\n}\n\n#patrolboat {\n  width: 80px;\n  height: 40px;\n}\n\n.missed-shot {\n  background-color: rgb(164, 199, 164) !important;\n  pointer-events: none;\n}\n\n.hit-shot {\n  background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n  pointer-events: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAKA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAFJ;;AAKA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,SAAA;AAFJ;;AAOA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;EACA,eAAA;EACA,mBAAA;EACA,uBAAA;EACA,eAAA;AAJJ;;AASA;EACI,aAAA;EACA,6BAAA;EACA,WAAA;AANJ;;AASA;EACI,aAAA;EACA,SAAA;AANJ;;AASA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AANJ;;AASA;EACI,eAAA;EACA,sBAAA;AANJ;;AASA;EACI,kBAAA;EACA,sBAAA;EACA,WAAA;EACA,+BAAA;AANJ;;AASA;EACI,eAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,WAAA;EACA,YAAA;AANJ;;AASA;EACI,+CAAA;EACA,oBAAA;AANJ;;AASA;EACI,+CAAA;AANJ;;AASA;EACI,oBAAA;AANJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#starting-gameboard {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#computer-gameboard .square:hover {\n    cursor: pointer;\n}\n\n\n//  Modal \n#start-screen    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n#playing-screen   {\n    display: none;\n    justify-content: center;\n    align-items: center;\n    gap: 30px;\n}\n\n\n\n#end-modal   {\n    display: none;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n    position: fixed;\n    align-items: center;\n    justify-content: center;\n    font-size: 45px;\n}\n\n\n//  Button Elements\n.starting-buttons {\n    display: flex;\n    justify-content: space-evenly;\n    width: 100%;\n}\n\n#start-screen-buttons   {\n    display: flex;\n    gap: 30px;\n}\n\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n.ship   {\n    position: absolute;\n    background-color: grey;\n    z-index: 99;\n    box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover{\n    cursor: pointer;\n}\n\n#carrier    {\n    width: 200px;\n    height: 40px;\n}\n\n#battleship   {\n    width: 160px;\n    height: 40px;\n}\n\n#destroyer   {\n    width: 120px;\n    height: 40px;\n}\n\n#submarine   {\n    width: 120px;\n    height: 40px;\n}\n\n#patrolboat   {\n    width: 80px;\n    height: 40px;\n}\n\n.missed-shot    {\n    background-color: rgb(164, 199, 164) !important;\n    pointer-events: none;\n}\n\n.hit-shot   {\n    background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n    pointer-events: none;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1146,48 +1146,80 @@ function beginGame() {
   startScreen.style.display = "none";
   var playingScreen = document.getElementById('playing-screen');
   playingScreen.style.display = "flex";
-  loadPlayingGameboards();
+  var game = gameloop();
+  game.loadPlayingGameboards();
 }
 
 //  Playing Screen Functions
-function loadPlayingGameboards() {
-  var gameboards = gameboardStorage;
-  var playerGameboard = document.getElementById('player-gameboard');
-  var computerGameboard = document.getElementById('computer-gameboard');
-  for (var i = 0; i < gameboards.length; i++) {
-    /*  !!! --- Updated below to switch */
-    if (gameboards[i].gameboardName === "Player") {
-      displayGameboard(gameboards[i], playerGameboard);
-    } else {
-      displayGameboard(gameboards[i], computerGameboard);
-      addClickFunction(gameboards[i], computerGameboard);
+var gameloop = function gameloop() {
+  function loadPlayingGameboards() {
+    var gameboards = gameboardStorage;
+    var playerGameboard = document.getElementById('player-gameboard');
+    var computerGameboard = document.getElementById('computer-gameboard');
+    for (var i = 0; i < gameboards.length; i++) {
+      if (gameboards[i].gameboardName === "Player") {
+        displayGameboard(gameboards[i], playerGameboard);
+      } else {
+        displayGameboard(gameboards[i], computerGameboard);
+        addClickFunction(gameboards[i], computerGameboard);
+      }
     }
   }
-}
-function addClickFunction(gameboard, domGameboard) {
-  var cells = domGameboard.querySelectorAll('.square');
-  cells.forEach(function (cell) {
-    cell.addEventListener('click', function (e) {
-      var row = e.target.getAttribute('data-x') * 1;
-      var column = e.target.getAttribute('data-y') * 1;
-      userAttack(playerStorage[0], row, column, gameboard);
+  function addClickFunction(gameboard, domGameboard) {
+    var cells = domGameboard.querySelectorAll('.square');
+    cells.forEach(function (cell) {
+      cell.addEventListener('click', function (e) {
+        var row = e.target.getAttribute('data-x') * 1;
+        var column = e.target.getAttribute('data-y') * 1;
+        userAttack(playerStorage[0], row, column, gameboard);
+      });
     });
-  });
-}
-function userAttack(playerUser, row, column, enemyGameboard) {
-  playerUser.attackEnemy(row, column, enemyGameboard);
-  checkIfWinner(playerUser, enemyGameboard);
-  randomComputerAttack(playerStorage[1], gameboardStorage[0]);
-}
-function randomComputerAttack(computerUser, enemyGameboard) {
-  computerUser.randomAttack(enemyGameboard);
-  checkIfWinner(computerUser, enemyGameboard);
-}
-function checkIfWinner(currentUser, enemyGameboard) {
-  if (enemyGameboard.allSunk()) {
-    endGameDisplay(currentUser);
-  } else updateGameboardDisplay(currentUser, enemyGameboard);
-}
+  }
+  function userAttack(playerUser, row, column, enemyGameboard) {
+    playerUser.attackEnemy(row, column, enemyGameboard);
+    checkIfWinner(playerUser, enemyGameboard);
+    computerAttack(playerStorage[1], gameboardStorage[0]);
+  }
+  var nextComputerAttack = [];
+  function computerAttack(computerUser, enemyGameboard) {
+    if (nextComputerAttack.length === 0) {
+      computerUser.randomAttack(enemyGameboard);
+      var lastAttack = computerUser.attackedCoordinates[computerUser.attackedCoordinates.length - 1];
+      var row = lastAttack[0];
+      var column = lastAttack[1];
+      if (enemyGameboard.grid[row][column]) {
+        var attackedShip = enemyGameboard.grid[lastAttack[0]][lastAttack[1]];
+        if (attackedShip.isVertical) {
+          for (var i = (attackedShip.length - 1) * -1; i < attackedShip.length; i++) {
+            if (i != 0 && row + i < 10 && row + i > -1 && !computerUser.attackedCoordinates.includes([row + i, column])) nextComputerAttack.push([row + i, column]);
+          }
+        } else {
+          for (var _i4 = (attackedShip.length - 1) * -1; _i4 < attackedShip.length; _i4++) {
+            if (_i4 != 0 && column + _i4 < 10 && column + _i4 > -1 && !computerUser.attackedCoordinates.includes([row, column + _i4])) nextComputerAttack.push([row, column + _i4]);
+          }
+        }
+      }
+    } else {
+      var nextAttack = nextComputerAttack.shift();
+      var nextAttackRow = nextAttack[0];
+      var nextAttackColumn = nextAttack[1];
+      computerUser.attackEnemy(nextAttackRow, nextAttackColumn, enemyGameboard);
+      if (enemyGameboard.grid[nextAttackRow][nextAttackColumn] && enemyGameboard.grid[nextAttackRow][nextAttackColumn].isSunk()) {
+        nextComputerAttack = [];
+      }
+    }
+    checkIfWinner(computerUser, enemyGameboard);
+  }
+  function checkIfWinner(currentUser, enemyGameboard) {
+    console.log(currentUser, enemyGameboard.name);
+    if (enemyGameboard.allSunk()) {
+      endGameDisplay(currentUser);
+    } else updateGameboardDisplay(currentUser, enemyGameboard);
+  }
+  return {
+    loadPlayingGameboards: loadPlayingGameboards
+  };
+};
 function updateGameboardDisplay(currentUser, enemyGameboard) {
   var recentAttack = currentUser.attackedCoordinates[currentUser.attackedCoordinates.length - 1];
   var row = recentAttack[0];
@@ -1204,6 +1236,8 @@ function updateGameboardDisplay(currentUser, enemyGameboard) {
     }
   });
 }
+
+//  End Game Modal
 function endGameDisplay(winner) {
   var endModal = document.getElementById('end-modal');
   endModal.style.display = "flex";
@@ -1235,4 +1269,4 @@ function resetGame() {
 
 /******/ })()
 ;
-//# sourceMappingURL=main29bb7ee69cda02e165a2.js.map
+//# sourceMappingURL=main76354ba566357b948ba4.js.map
