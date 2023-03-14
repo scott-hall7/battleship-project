@@ -1,0 +1,29 @@
+#starting-gameboard {
+    display: grid;
+    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+    border: 1px solid black;
+    height: 400px;
+    width: 400px;
+}
+
+#start-screen    {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    background-color: rgb(218, 214, 207);
+    padding: 40px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 20px;
+}
+
+.starting-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+#start-screen-buttons   {
+    display: flex;
+    gap: 30px;
+}
