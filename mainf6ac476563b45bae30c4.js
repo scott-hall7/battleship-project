@@ -210,9 +210,301 @@ var Ship = function Ship(l, vertical) {
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/body.scss":
+/***/ "./src/js/game/gameloop.js":
+/*!*********************************!*\
+  !*** ./src/js/game/gameloop.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "gameLoop": () => (/* binding */ gameLoop)
+/* harmony export */ });
+/* harmony import */ var _startscreen__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./startscreen */ "./src/js/game/startscreen.js");
+
+var gameLoop = function gameLoop() {
+  var playerStorage = [];
+  var gameboardStorage = [];
+  function loadPlayingGameboards() {
+    var gameboards = gameboardStorage;
+    var playerGameboard = document.getElementById('player-gameboard');
+    var computerGameboard = document.getElementById('computer-gameboard');
+    for (var i = 0; i < gameboards.length; i++) {
+      if (gameboards[i].gameboardName === "Player") {
+        (0,_startscreen__WEBPACK_IMPORTED_MODULE_0__.displayGameboard)(gameboards[i], playerGameboard);
+      } else {
+        (0,_startscreen__WEBPACK_IMPORTED_MODULE_0__.displayGameboard)(gameboards[i], computerGameboard);
+        addClickFunction(gameboards[i], computerGameboard);
+      }
+    }
+  }
+  function addClickFunction(gameboard, domGameboard) {
+    var cells = domGameboard.querySelectorAll('.square');
+    cells.forEach(function (cell) {
+      cell.addEventListener('click', function (e) {
+        var row = e.target.getAttribute('data-x') * 1;
+        var column = e.target.getAttribute('data-y') * 1;
+        userAttack(playerStorage[0], row, column, gameboard);
+      });
+    });
+  }
+  function userAttack(playerUser, row, column, enemyGameboard) {
+    playerUser.attackEnemy(row, column, enemyGameboard);
+    checkIfWinner(playerUser, enemyGameboard);
+    computerAttack(playerStorage[1], gameboardStorage[0]);
+  }
+  var nextComputerAttack = [];
+  function computerAttack(computerUser, enemyGameboard) {
+    if (nextComputerAttack.length === 0) {
+      computerUser.randomAttack(enemyGameboard);
+      var lastAttack = computerUser.attackedCoordinates[computerUser.attackedCoordinates.length - 1];
+      var row = lastAttack[0];
+      var column = lastAttack[1];
+      if (enemyGameboard.grid[row][column]) {
+        var attackedShip = enemyGameboard.grid[lastAttack[0]][lastAttack[1]];
+        if (attackedShip.isVertical) {
+          for (var i = (attackedShip.length - 1) * -1; i < attackedShip.length; i++) {
+            if (i != 0 && row + i < 10 && row + i > -1 && !computerUser.attackedCoordinates.includes([row + i, column])) nextComputerAttack.push([row + i, column]);
+          }
+        } else {
+          for (var _i = (attackedShip.length - 1) * -1; _i < attackedShip.length; _i++) {
+            if (_i != 0 && column + _i < 10 && column + _i > -1 && !computerUser.attackedCoordinates.includes([row, column + _i])) nextComputerAttack.push([row, column + _i]);
+          }
+        }
+      }
+    } else {
+      var nextAttack = nextComputerAttack.shift();
+      var nextAttackRow = nextAttack[0];
+      var nextAttackColumn = nextAttack[1];
+      computerUser.attackEnemy(nextAttackRow, nextAttackColumn, enemyGameboard);
+      if (enemyGameboard.grid[nextAttackRow][nextAttackColumn] && enemyGameboard.grid[nextAttackRow][nextAttackColumn].isSunk()) {
+        nextComputerAttack = [];
+      }
+    }
+    checkIfWinner(computerUser, enemyGameboard);
+  }
+  function checkIfWinner(currentUser, enemyGameboard) {
+    if (enemyGameboard.allSunk()) {
+      endGameDisplay(currentUser);
+    } else updateGameboardDisplay(currentUser, enemyGameboard);
+  }
+  function updateGameboardDisplay(currentUser, enemyGameboard) {
+    var recentAttack = currentUser.attackedCoordinates[currentUser.attackedCoordinates.length - 1];
+    var row = recentAttack[0];
+    var column = recentAttack[1];
+    var playerGameboardCells = document.getElementById('player-gameboard').querySelectorAll('.square');
+    var computerGameboardCells = document.getElementById('computer-gameboard').querySelectorAll('.square');
+    var currentGameboardCells = currentUser.name === "Player" ? computerGameboardCells : playerGameboardCells;
+    currentGameboardCells.forEach(function (cell) {
+      var x = cell.getAttribute('data-x') * 1;
+      var y = cell.getAttribute('data-y') * 1;
+      if (x === row && y === column) {
+        if (enemyGameboard.grid[row][column]) cell.classList.add('hit-shot');else cell.classList.add('missed-shot');
+        return;
+      }
+    });
+  }
+  return {
+    playerStorage: playerStorage,
+    gameboardStorage: gameboardStorage,
+    loadPlayingGameboards: loadPlayingGameboards
+  };
+};
+function endGameDisplay(winner) {
+  var endModal = document.getElementById('end-modal');
+  endModal.style.display = "flex";
+  var winningText = document.getElementById("winning-text");
+  winningText.textContent = "".concat(winner.name, " wins!");
+  var playingGameboards = document.querySelectorAll(".playing-gameboard");
+  playingGameboards.forEach(function (gameboard) {
+    gameboard.classList.add("disableCursor");
+  });
+  var resetButton = document.getElementById('reset-button');
+  resetButton.addEventListener('click', function () {
+    resetGame();
+    endModal.style.display = "none";
+    var playingScreen = document.getElementById('playing-screen');
+    playingScreen.style.display = "none";
+    playingGameboards.forEach(function (gameboard) {
+      gameboard.classList.remove("disableCursor");
+    });
+  });
+}
+function resetGame() {
+  _startscreen__WEBPACK_IMPORTED_MODULE_0__.game.playerStorage = [];
+  _startscreen__WEBPACK_IMPORTED_MODULE_0__.game.gameboardStorage = [];
+  var startingGameboard = document.getElementById('starting-gameboard');
+  startingGameboard.remove();
+  (0,_startscreen__WEBPACK_IMPORTED_MODULE_0__.startScreenFunctions)();
+}
+
+/***/ }),
+
+/***/ "./src/js/game/startscreen.js":
+/*!************************************!*\
+  !*** ./src/js/game/startscreen.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "displayGameboard": () => (/* binding */ displayGameboard),
+/* harmony export */   "game": () => (/* binding */ game),
+/* harmony export */   "startScreenFunctions": () => (/* binding */ startScreenFunctions)
+/* harmony export */ });
+/* harmony import */ var _gameloop__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./gameloop */ "./src/js/game/gameloop.js");
+/* harmony import */ var _factories_gameboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../factories/gameboard */ "./src/js/factories/gameboard.js");
+/* harmony import */ var _factories_player__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../factories/player */ "./src/js/factories/player.js");
+
+
+
+var game;
+function startScreenFunctions() {
+  game = (0,_gameloop__WEBPACK_IMPORTED_MODULE_0__.gameLoop)();
+  var startScreen = document.getElementById('start-screen');
+  startScreen.style.display = "flex";
+  var startingGameboard = document.createElement('div');
+  startingGameboard.setAttribute("id", "starting-gameboard");
+  startScreen.appendChild(startingGameboard);
+  var startButton = document.getElementById('start-button');
+  startButton.addEventListener('click', beginGame);
+  loadPlayers();
+}
+function loadPlayers() {
+  var newPlayer = (0,_factories_player__WEBPACK_IMPORTED_MODULE_2__["default"])('Player');
+  var computerPlayer = (0,_factories_player__WEBPACK_IMPORTED_MODULE_2__["default"])('Computer');
+  game.playerStorage.push(newPlayer, computerPlayer);
+  loadGameboards(newPlayer, computerPlayer);
+}
+function loadGameboards(player, computer) {
+  var newPlayerGameboard = (0,_factories_gameboard__WEBPACK_IMPORTED_MODULE_1__["default"])("".concat(player.name));
+  var computerGameboard = (0,_factories_gameboard__WEBPACK_IMPORTED_MODULE_1__["default"])("".concat(computer.name));
+  newPlayerGameboard.initialize();
+  newPlayerGameboard.placeShipsRandomly();
+  computerGameboard.initialize();
+  computerGameboard.placeShipsRandomly();
+  game.gameboardStorage.push(newPlayerGameboard, computerGameboard);
+  var startingGameboard = document.getElementById('starting-gameboard');
+  displayGameboard(newPlayerGameboard, startingGameboard);
+}
+function findActiveShip(cell, gameboard, startingGameboard) {
+  var row = cell.getAttribute('data-x');
+  var column = cell.getAttribute('data-y');
+  var activeShip = gameboard.grid[row][column];
+  toggleRotateButton(activeShip);
+  for (var i = 0; i < 10; i++) {
+    for (var j = 0; j < 10; j++) {
+      if (gameboard.grid[i][j] === activeShip) gameboard.grid[i][j] = null;
+    }
+  }
+  displayGameboard(gameboard, startingGameboard);
+  selectNewPosition(activeShip, gameboard);
+}
+function selectNewPosition(activeShip, gameboard) {
+  var occupiedPositions = document.querySelectorAll('.occupied');
+  occupiedPositions.forEach(function (cell) {
+    return cell.style.pointerEvents = "none";
+  });
+  var startButton = document.getElementById('start-button');
+  startButton.style.pointerEvents = "none";
+  var startingGameboard = document.getElementById('starting-gameboard');
+  var startingGameboardCells = startingGameboard.querySelectorAll('.square');
+  startingGameboardCells.forEach(function (cell) {
+    var row = cell.getAttribute('data-x') * 1;
+    var column = cell.getAttribute('data-y') * 1;
+    cell.addEventListener('mouseover', function () {
+      if (gameboard.checkCoordinate(activeShip, row, column, activeShip.isVertical)) {
+        cell.addEventListener('click', function () {
+          gameboard.placeShip(activeShip, row, column);
+          displayGameboard(gameboard, startingGameboard);
+          startButton.style.pointerEvents = "auto";
+        });
+        if (activeShip.isVertical) {
+          for (var i = 0; i < activeShip.length; i++) {
+            var additionalCell = document.querySelector("[data-x=" + CSS.escape(row + i) + "][data-y=" + CSS.escape(column) + "]");
+            if (additionalCell) additionalCell.classList.add('placement-hover');
+          }
+        } else {
+          for (var _i = 0; _i < activeShip.length; _i++) {
+            var _additionalCell = document.querySelector("[data-x=" + CSS.escape(row) + "][data-y=" + CSS.escape(column + _i) + "]");
+            if (_additionalCell) _additionalCell.classList.add('placement-hover');
+          }
+        }
+      } else {
+        if (activeShip.isVertical) {
+          for (var _i2 = 0; _i2 < activeShip.length; _i2++) {
+            var _additionalCell2 = document.querySelector("[data-x=" + CSS.escape(row + _i2) + "][data-y=" + CSS.escape(column) + "]");
+            if (_additionalCell2) _additionalCell2.classList.add('no-placement-hover');
+          }
+        } else {
+          for (var _i3 = 0; _i3 < activeShip.length; _i3++) {
+            var _additionalCell3 = document.querySelector("[data-x=" + CSS.escape(row) + "][data-y=" + CSS.escape(column + _i3) + "]");
+            if (_additionalCell3) _additionalCell3.classList.add('no-placement-hover');
+          }
+        }
+      }
+    });
+    cell.addEventListener('mouseout', function () {
+      for (var i = 0; i < startingGameboardCells.length; i++) {
+        startingGameboardCells[i].classList.remove('placement-hover');
+        startingGameboardCells[i].classList.remove('no-placement-hover');
+      }
+    });
+  });
+}
+function toggleRotateButton(ship) {
+  if (document.getElementById('rotate-button')) {
+    var _rotateButton = document.getElementById('rotate-button');
+    _rotateButton.remove();
+  }
+  var rotateButton = document.createElement('button');
+  rotateButton.id = "rotate-button";
+  rotateButton.classList.add('button');
+  rotateButton.textContent = "Rotate Button";
+  rotateButton.addEventListener('click', function () {
+    rotateCurrentShip(ship);
+  });
+  var startScreenButtons = document.getElementById('start-screen-buttons');
+  startScreenButtons.appendChild(rotateButton);
+}
+function rotateCurrentShip(ship) {
+  ship.isVertical = !ship.isVertical;
+}
+function beginGame() {
+  var startScreen = document.getElementById('start-screen');
+  startScreen.style.display = "none";
+  var playingScreen = document.getElementById('playing-screen');
+  playingScreen.style.display = "flex";
+  game.loadPlayingGameboards();
+}
+function displayGameboard(gameboard, domGameboard) {
+  domGameboard.innerHTML = "";
+  for (var row = 0; row < 10; row++) {
+    for (var column = 0; column < 10; column++) {
+      var newSquare = document.createElement('div');
+      newSquare.className = 'square';
+      newSquare.dataset.x = row;
+      newSquare.dataset.y = column;
+      if (gameboard.gameboardName === "Player" && gameboard.grid[row][column]) {
+        if (domGameboard.id === 'starting-gameboard') {
+          newSquare.classList.add('occupied');
+          newSquare.addEventListener('click', function (e) {
+            findActiveShip(e.target, gameboard, domGameboard);
+          });
+        } else {
+          newSquare.classList.add('locked-occupied');
+        }
+      }
+      domGameboard.appendChild(newSquare);
+    }
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss":
 /*!***********************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/body.scss ***!
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss ***!
   \***********************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -234,17 +526,17 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n*,\n*::before,\n*::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: inherit;\n}\n\nhtml {\n  font-size: 62.5%;\n}\n\nbody {\n  display: flex;\n  flex-direction: column;\n  gap: 50px;\n  align-items: center;\n  font-size: 1.6rem;\n  margin: 0, auto;\n  margin-top: 30px;\n}\n\nheader {\n  font-size: 5rem;\n  font-family: \"MyFont\", \"Courier New\", Courier, monospace;\n}\n\n.square {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-size: 20px;\n  border: 1px solid rgb(0, 0, 0);\n  background-color: #c3d2e0;\n}\n\n.occupied {\n  background-color: grey;\n}\n\n.occupied:hover {\n  cursor: pointer;\n}\n\n.locked-occupied {\n  background-color: rgb(97, 96, 96);\n}\n\n.placement-hover {\n  background-color: green;\n}\n\n.no-placement-hover {\n  background-color: red;\n}", "",{"version":3,"sources":["webpack://./src/styles/body.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;;;EAGI,SAAA;EACA,UAAA;EACA,mBAAA;AAAJ;;AAGA;EACI,gBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,iBAAA;EACA,eAAA;EACA,gBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,wDAAA;AAAJ;;AAGA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,eAAA;EACA,8BAAA;EACA,yBAAA;AAAJ;;AAGA;EACI,sBAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAGA;EACI,iCAAA;AAAJ;;AAGA;EACI,uBAAA;AAAJ;;AAGA;EACI,qBAAA;AAAJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n*,\n*::before,\n*::after {\n    margin: 0;\n    padding: 0;\n    box-sizing: inherit;\n}\n\nhtml {\n    font-size: 62.5%;\n}\n\nbody {\n    display: flex;\n    flex-direction: column;\n    gap: 50px;\n    align-items: center;\n    font-size: 1.6rem;\n    margin: 0, auto;\n    margin-top: 30px;\n}\n\nheader  {\n    font-size: 5rem;\n    font-family:'MyFont', 'Courier New', Courier, monospace;\n}\n\n.square {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 20px;\n    border: 1px solid rgb(0, 0, 0);\n    background-color: #c3d2e0;\n}\n\n.occupied  {\n    background-color: grey;\n}\n\n.occupied:hover {\n    cursor: pointer;\n}\n\n.locked-occupied    {\n    background-color: rgb(97, 96, 96);\n}\n\n.placement-hover    {\n    background-color: green;\n}\n\n.no-placement-hover {\n    background-color: red;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n*,\n*::before,\n*::after {\n  margin: 0;\n  padding: 0;\n  box-sizing: inherit;\n}\n\nhtml {\n  font-size: 62.5%;\n}\n\nbody {\n  display: flex;\n  flex-direction: column;\n  gap: 50px;\n  align-items: center;\n  font-size: 1.6rem;\n  margin: 0, auto;\n  margin-top: 30px;\n}\n\nheader {\n  font-size: 5rem;\n  font-family: \"MyFont\", \"Courier New\", Courier, monospace;\n}\n\n.square {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-size: 20px;\n  border: 1px solid rgb(0, 0, 0);\n  background-color: #c3d2e0;\n}\n\n.occupied {\n  background-color: grey;\n}\n\n.occupied:hover {\n  cursor: pointer;\n}\n\n.locked-occupied {\n  background-color: rgb(97, 96, 96);\n}\n\n.placement-hover {\n  background-color: green;\n}\n\n.no-placement-hover {\n  background-color: red;\n}\n\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#computer-gameboard .square:hover {\n  cursor: pointer;\n}\n\n#playing-screen {\n  display: none;\n  justify-content: center;\n  align-items: center;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n  position: fixed;\n  align-items: center;\n  justify-content: center;\n  font-size: 45px;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}\n\n.missed-shot {\n  background-color: rgb(164, 199, 164) !important;\n  pointer-events: none;\n}\n\n.hit-shot {\n  background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n  pointer-events: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/main.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;;;EAGI,SAAA;EACA,UAAA;EACA,mBAAA;AAAJ;;AAGA;EACI,gBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,iBAAA;EACA,eAAA;EACA,gBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,wDAAA;AAAJ;;AAGA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,eAAA;EACA,8BAAA;EACA,yBAAA;AAAJ;;AAGA;EACI,sBAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAGA;EACI,iCAAA;AAAJ;;AAGA;EACI,uBAAA;AAAJ;;AAGA;EACI,qBAAA;AAAJ;;AAGA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAGA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,SAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;EACA,eAAA;EACA,mBAAA;EACA,uBAAA;EACA,eAAA;AAAJ;;AAGA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AAAJ;;AAGA;EACI,eAAA;EACA,sBAAA;AAAJ;;AAGA;EACI,+CAAA;EACA,oBAAA;AAAJ;;AAGA;EACI,+CAAA;AAAJ;;AAGA;EACI,oBAAA;AAAJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n*,\n*::before,\n*::after {\n    margin: 0;\n    padding: 0;\n    box-sizing: inherit;\n}\n\nhtml {\n    font-size: 62.5%;\n}\n\nbody {\n    display: flex;\n    flex-direction: column;\n    gap: 50px;\n    align-items: center;\n    font-size: 1.6rem;\n    margin: 0, auto;\n    margin-top: 30px;\n}\n\nheader  {\n    font-size: 5rem;\n    font-family:'MyFont', 'Courier New', Courier, monospace;\n}\n\n.square {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 20px;\n    border: 1px solid rgb(0, 0, 0);\n    background-color: #c3d2e0;\n}\n\n.occupied  {\n    background-color: grey;\n}\n\n.occupied:hover {\n    cursor: pointer;\n}\n\n.locked-occupied    {\n    background-color: rgb(97, 96, 96);\n}\n\n.placement-hover    {\n    background-color: green;\n}\n\n.no-placement-hover {\n    background-color: red;\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#computer-gameboard .square:hover {\n    cursor: pointer;\n}\n\n#playing-screen   {\n    display: none;\n    justify-content: center;\n    align-items: center;\n    gap: 30px;\n}\n\n#end-modal   {\n    display: none;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n    position: fixed;\n    align-items: center;\n    justify-content: center;\n    font-size: 45px;\n}\n\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n.missed-shot    {\n    background-color: rgb(164, 199, 164) !important;\n    pointer-events: none;\n}\n\n.hit-shot   {\n    background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n    pointer-events: none;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/modal.scss":
-/*!************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/modal.scss ***!
-  \************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/startscreen.scss":
+/*!******************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/startscreen.scss ***!
+  \******************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -255,17 +547,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
-/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
 // Imports
 
 
-
-var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/fonts/Unbounded-VariableFont_wght.ttf */ "./src/assets/fonts/Unbounded-VariableFont_wght.ttf"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
-var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "@font-face {\n  font-family: \"MyFont\";\n  src: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ") format(\"truetype\");\n}\n.gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#starting-gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#computer-gameboard .square:hover {\n  cursor: pointer;\n}\n\n#start-screen {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n#playing-screen {\n  display: none;\n  justify-content: center;\n  align-items: center;\n  gap: 30px;\n}\n\n#end-modal {\n  display: none;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n  position: fixed;\n  align-items: center;\n  justify-content: center;\n  font-size: 45px;\n}\n\n.starting-buttons {\n  display: flex;\n  justify-content: space-evenly;\n  width: 100%;\n}\n\n#start-screen-buttons {\n  display: flex;\n  gap: 30px;\n}\n\n.button {\n  font-size: 2rem;\n  color: white;\n  background-color: rgb(63, 60, 60);\n  border-radius: 20px;\n  border: none;\n  padding: 10px 20px;\n}\n\n.button:hover {\n  cursor: pointer;\n  transform: scale(1.05);\n}\n\n.ship {\n  position: absolute;\n  background-color: grey;\n  z-index: 99;\n  box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover {\n  cursor: pointer;\n}\n\n#carrier {\n  width: 200px;\n  height: 40px;\n}\n\n#battleship {\n  width: 160px;\n  height: 40px;\n}\n\n#destroyer {\n  width: 120px;\n  height: 40px;\n}\n\n#submarine {\n  width: 120px;\n  height: 40px;\n}\n\n#patrolboat {\n  width: 80px;\n  height: 40px;\n}\n\n.missed-shot {\n  background-color: rgb(164, 199, 164) !important;\n  pointer-events: none;\n}\n\n.hit-shot {\n  background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n  pointer-events: none;\n}", "",{"version":3,"sources":["webpack://./src/styles/modal.scss"],"names":[],"mappings":"AAAA;EACI,qBAAA;EACA,+DAAA;AACJ;AAEA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,eAAA;AAAJ;;AAKA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAFJ;;AAKA;EACI,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,SAAA;AAFJ;;AAOA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;EACA,eAAA;EACA,mBAAA;EACA,uBAAA;EACA,eAAA;AAJJ;;AASA;EACI,aAAA;EACA,6BAAA;EACA,WAAA;AANJ;;AASA;EACI,aAAA;EACA,SAAA;AANJ;;AASA;EACI,eAAA;EACA,YAAA;EACA,iCAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;AANJ;;AASA;EACI,eAAA;EACA,sBAAA;AANJ;;AASA;EACI,kBAAA;EACA,sBAAA;EACA,WAAA;EACA,+BAAA;AANJ;;AASA;EACI,eAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,YAAA;EACA,YAAA;AANJ;;AASA;EACI,WAAA;EACA,YAAA;AANJ;;AASA;EACI,+CAAA;EACA,oBAAA;AANJ;;AASA;EACI,+CAAA;AANJ;;AASA;EACI,oBAAA;AANJ","sourcesContent":["@font-face {\n    font-family: 'MyFont';\n    src: url('../assets/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');\n}\n\n.gameboard  {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#starting-gameboard {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#computer-gameboard .square:hover {\n    cursor: pointer;\n}\n\n\n//  Modal \n#start-screen    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n#playing-screen   {\n    display: none;\n    justify-content: center;\n    align-items: center;\n    gap: 30px;\n}\n\n\n\n#end-modal   {\n    display: none;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n    position: fixed;\n    align-items: center;\n    justify-content: center;\n    font-size: 45px;\n}\n\n\n//  Button Elements\n.starting-buttons {\n    display: flex;\n    justify-content: space-evenly;\n    width: 100%;\n}\n\n#start-screen-buttons   {\n    display: flex;\n    gap: 30px;\n}\n\n.button {\n    font-size: 2rem;\n    color: white;\n    background-color: rgb(63, 60, 60);\n    border-radius: 20px;\n    border: none;\n    padding: 10px 20px;\n}\n\n.button:hover   {\n    cursor: pointer;\n    transform: scale(1.05);\n}\n\n.ship   {\n    position: absolute;\n    background-color: grey;\n    z-index: 99;\n    box-shadow: inset 0 0 2px black;\n}\n\n.ship:hover{\n    cursor: pointer;\n}\n\n#carrier    {\n    width: 200px;\n    height: 40px;\n}\n\n#battleship   {\n    width: 160px;\n    height: 40px;\n}\n\n#destroyer   {\n    width: 120px;\n    height: 40px;\n}\n\n#submarine   {\n    width: 120px;\n    height: 40px;\n}\n\n#patrolboat   {\n    width: 80px;\n    height: 40px;\n}\n\n.missed-shot    {\n    background-color: rgb(164, 199, 164) !important;\n    pointer-events: none;\n}\n\n.hit-shot   {\n    background-color: rgb(192, 113, 113) !important;\n}\n\n.disableCursor {\n    pointer-events: none;\n}\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#starting-gameboard {\n  display: grid;\n  grid-template: repeat(10, 1fr)/repeat(10, 1fr);\n  border: 1px solid black;\n  height: 400px;\n  width: 400px;\n}\n\n#start-screen {\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n  align-items: center;\n  background-color: rgb(218, 214, 207);\n  padding: 40px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n  border-radius: 20px;\n}\n\n.starting-buttons {\n  display: flex;\n  justify-content: space-evenly;\n  width: 100%;\n}\n\n#start-screen-buttons {\n  display: flex;\n  gap: 30px;\n}", "",{"version":3,"sources":["webpack://./src/styles/startscreen.scss"],"names":[],"mappings":"AACA;EACI,aAAA;EACA,8CAAA;EACA,uBAAA;EACA,aAAA;EACA,YAAA;AAAJ;;AAGA;EACI,aAAA;EACA,sBAAA;EACA,SAAA;EACA,mBAAA;EACA,oCAAA;EACA,aAAA;EACA,4CAAA;EACA,mBAAA;AAAJ;;AAIA;EACI,aAAA;EACA,6BAAA;EACA,WAAA;AADJ;;AAIA;EACI,aAAA;EACA,SAAA;AADJ","sourcesContent":["\n#starting-gameboard {\n    display: grid;\n    grid-template: repeat(10, 1fr) / repeat(10, 1fr);\n    border: 1px solid black;\n    height: 400px;\n    width: 400px;\n}\n\n#start-screen    {\n    display: flex;\n    flex-direction: column;\n    gap: 30px;\n    align-items: center;\n    background-color: rgb(218, 214, 207);\n    padding: 40px;\n    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;\n    border-radius: 20px;\n}\n\n\n.starting-buttons {\n    display: flex;\n    justify-content: space-evenly;\n    width: 100%;\n}\n\n#start-screen-buttons   {\n    display: flex;\n    gap: 30px;\n}\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -426,9 +713,9 @@ module.exports = function (item) {
 
 /***/ }),
 
-/***/ "./src/styles/body.scss":
+/***/ "./src/styles/main.scss":
 /*!******************************!*\
-  !*** ./src/styles/body.scss ***!
+  !*** ./src/styles/main.scss ***!
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -448,7 +735,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_body_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./body.scss */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/body.scss");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_main_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./main.scss */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/main.scss");
 
       
       
@@ -470,20 +757,20 @@ options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWi
 options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
 options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_body_scss__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_main_scss__WEBPACK_IMPORTED_MODULE_6__["default"], options);
 
 
 
 
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_body_scss__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_body_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_body_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_main_scss__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_main_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_main_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
 
-/***/ "./src/styles/modal.scss":
-/*!*******************************!*\
-  !*** ./src/styles/modal.scss ***!
-  \*******************************/
+/***/ "./src/styles/startscreen.scss":
+/*!*************************************!*\
+  !*** ./src/styles/startscreen.scss ***!
+  \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -502,7 +789,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_modal_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./modal.scss */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/modal.scss");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_startscreen_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!../../node_modules/sass-loader/dist/cjs.js!./startscreen.scss */ "./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/styles/startscreen.scss");
 
       
       
@@ -524,12 +811,12 @@ options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWi
 options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
 options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_modal_scss__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_startscreen_scss__WEBPACK_IMPORTED_MODULE_6__["default"], options);
 
 
 
 
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_modal_scss__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_modal_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_modal_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_startscreen_scss__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_startscreen_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_sass_loader_dist_cjs_js_startscreen_scss__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -991,282 +1278,15 @@ var __webpack_exports__ = {};
   !*** ./src/index.js ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _styles_modal_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/modal.scss */ "./src/styles/modal.scss");
-/* harmony import */ var _styles_body_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/body.scss */ "./src/styles/body.scss");
-/* harmony import */ var _js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/factories/gameboard */ "./src/js/factories/gameboard.js");
-/* harmony import */ var _js_factories_ship__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/factories/ship */ "./src/js/factories/ship.js");
-/* harmony import */ var _js_factories_player__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./js/factories/player */ "./src/js/factories/player.js");
+/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/main.scss */ "./src/styles/main.scss");
+/* harmony import */ var _styles_startscreen_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/startscreen.scss */ "./src/styles/startscreen.scss");
+/* harmony import */ var _js_game_startscreen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/game/startscreen */ "./src/js/game/startscreen.js");
 
 
 
-
-
-
-//Start Screen Functions
-var playerStorage = [];
-var gameboardStorage = [];
-startScreenFunctions();
-function startScreenFunctions() {
-  var startScreen = document.getElementById('start-screen');
-  startScreen.style.display = "flex";
-  var startingGameboard = document.createElement('div');
-  startingGameboard.setAttribute("id", "starting-gameboard");
-  startScreen.appendChild(startingGameboard);
-  var startButton = document.getElementById('start-button');
-  startButton.addEventListener('click', beginGame);
-  loadPlayers();
-}
-function loadPlayers() {
-  var newPlayer = (0,_js_factories_player__WEBPACK_IMPORTED_MODULE_4__["default"])('Player');
-  var computerPlayer = (0,_js_factories_player__WEBPACK_IMPORTED_MODULE_4__["default"])('Computer');
-  playerStorage.push(newPlayer, computerPlayer);
-  loadGameboards(newPlayer, computerPlayer);
-}
-function loadGameboards(player, computer) {
-  var newPlayerGameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])("".concat(player.name));
-  var computerGameboard = (0,_js_factories_gameboard__WEBPACK_IMPORTED_MODULE_2__["default"])("".concat(computer.name));
-  newPlayerGameboard.initialize();
-  newPlayerGameboard.placeShipsRandomly();
-  computerGameboard.initialize();
-  computerGameboard.placeShipsRandomly();
-  gameboardStorage.push(newPlayerGameboard);
-  gameboardStorage.push(computerGameboard);
-  var startingGameboard = document.getElementById('starting-gameboard');
-  displayGameboard(newPlayerGameboard, startingGameboard);
-}
-
-//  Dom Elements
-function displayGameboard(gameboard, domGameboard) {
-  domGameboard.innerHTML = "";
-  for (var row = 0; row < 10; row++) {
-    for (var column = 0; column < 10; column++) {
-      var newSquare = document.createElement('div');
-      newSquare.className = 'square';
-      newSquare.dataset.x = row;
-      newSquare.dataset.y = column;
-      if (gameboard.gameboardName === "Player" && gameboard.grid[row][column]) {
-        if (domGameboard.id === 'starting-gameboard') {
-          newSquare.classList.add('occupied');
-          newSquare.addEventListener('click', function (e) {
-            findActiveShip(e.target, gameboard, domGameboard);
-          });
-        } else {
-          newSquare.classList.add('locked-occupied');
-        }
-      }
-      domGameboard.appendChild(newSquare);
-    }
-  }
-}
-function findActiveShip(cell, gameboard, startingGameboard) {
-  var row = cell.getAttribute('data-x');
-  var column = cell.getAttribute('data-y');
-  var activeShip = gameboard.grid[row][column];
-  toggleRotateButton(activeShip);
-  for (var i = 0; i < 10; i++) {
-    for (var j = 0; j < 10; j++) {
-      if (gameboard.grid[i][j] === activeShip) gameboard.grid[i][j] = null;
-    }
-  }
-  displayGameboard(gameboard, startingGameboard);
-  selectNewPosition(activeShip, gameboard);
-}
-function selectNewPosition(activeShip, gameboard) {
-  var occupiedPositions = document.querySelectorAll('.occupied');
-  occupiedPositions.forEach(function (cell) {
-    return cell.style.pointerEvents = "none";
-  });
-  var startButton = document.getElementById('start-button');
-  startButton.style.pointerEvents = "none";
-  var startingGameboard = document.getElementById('starting-gameboard');
-  var startingGameboardCells = startingGameboard.querySelectorAll('.square');
-  startingGameboardCells.forEach(function (cell) {
-    var row = cell.getAttribute('data-x') * 1;
-    var column = cell.getAttribute('data-y') * 1;
-    cell.addEventListener('mouseover', function () {
-      if (gameboard.checkCoordinate(activeShip, row, column, activeShip.isVertical)) {
-        cell.addEventListener('click', function () {
-          gameboard.placeShip(activeShip, row, column);
-          displayGameboard(gameboard, startingGameboard);
-          startButton.style.pointerEvents = "auto";
-        });
-        if (activeShip.isVertical) {
-          for (var i = 0; i < activeShip.length; i++) {
-            var additionalCell = document.querySelector("[data-x=" + CSS.escape(row + i) + "][data-y=" + CSS.escape(column) + "]");
-            if (additionalCell) additionalCell.classList.add('placement-hover');
-          }
-        } else {
-          for (var _i = 0; _i < activeShip.length; _i++) {
-            var _additionalCell = document.querySelector("[data-x=" + CSS.escape(row) + "][data-y=" + CSS.escape(column + _i) + "]");
-            if (_additionalCell) _additionalCell.classList.add('placement-hover');
-          }
-        }
-      } else {
-        if (activeShip.isVertical) {
-          for (var _i2 = 0; _i2 < activeShip.length; _i2++) {
-            var _additionalCell2 = document.querySelector("[data-x=" + CSS.escape(row + _i2) + "][data-y=" + CSS.escape(column) + "]");
-            if (_additionalCell2) _additionalCell2.classList.add('no-placement-hover');
-          }
-        } else {
-          for (var _i3 = 0; _i3 < activeShip.length; _i3++) {
-            var _additionalCell3 = document.querySelector("[data-x=" + CSS.escape(row) + "][data-y=" + CSS.escape(column + _i3) + "]");
-            if (_additionalCell3) _additionalCell3.classList.add('no-placement-hover');
-          }
-        }
-      }
-    });
-    cell.addEventListener('mouseout', function () {
-      for (var i = 0; i < startingGameboardCells.length; i++) {
-        startingGameboardCells[i].classList.remove('placement-hover');
-        startingGameboardCells[i].classList.remove('no-placement-hover');
-      }
-    });
-  });
-}
-function toggleRotateButton(ship) {
-  if (document.getElementById('rotate-button')) {
-    var _rotateButton = document.getElementById('rotate-button');
-    _rotateButton.remove();
-  }
-  var rotateButton = document.createElement('button');
-  rotateButton.id = "rotate-button";
-  rotateButton.classList.add('button');
-  rotateButton.textContent = "Rotate Button";
-  rotateButton.addEventListener('click', function () {
-    rotateCurrentShip(ship);
-  });
-  var startScreenButtons = document.getElementById('start-screen-buttons');
-  startScreenButtons.appendChild(rotateButton);
-}
-function rotateCurrentShip(ship) {
-  ship.isVertical = !ship.isVertical;
-}
-function beginGame() {
-  var startScreen = document.getElementById('start-screen');
-  startScreen.style.display = "none";
-  var playingScreen = document.getElementById('playing-screen');
-  playingScreen.style.display = "flex";
-  var game = gameloop();
-  game.loadPlayingGameboards();
-}
-
-//  Playing Screen Functions
-var gameloop = function gameloop() {
-  function loadPlayingGameboards() {
-    var gameboards = gameboardStorage;
-    var playerGameboard = document.getElementById('player-gameboard');
-    var computerGameboard = document.getElementById('computer-gameboard');
-    for (var i = 0; i < gameboards.length; i++) {
-      if (gameboards[i].gameboardName === "Player") {
-        displayGameboard(gameboards[i], playerGameboard);
-      } else {
-        displayGameboard(gameboards[i], computerGameboard);
-        addClickFunction(gameboards[i], computerGameboard);
-      }
-    }
-  }
-  function addClickFunction(gameboard, domGameboard) {
-    var cells = domGameboard.querySelectorAll('.square');
-    cells.forEach(function (cell) {
-      cell.addEventListener('click', function (e) {
-        var row = e.target.getAttribute('data-x') * 1;
-        var column = e.target.getAttribute('data-y') * 1;
-        userAttack(playerStorage[0], row, column, gameboard);
-      });
-    });
-  }
-  function userAttack(playerUser, row, column, enemyGameboard) {
-    playerUser.attackEnemy(row, column, enemyGameboard);
-    checkIfWinner(playerUser, enemyGameboard);
-    computerAttack(playerStorage[1], gameboardStorage[0]);
-  }
-  var nextComputerAttack = [];
-  function computerAttack(computerUser, enemyGameboard) {
-    if (nextComputerAttack.length === 0) {
-      computerUser.randomAttack(enemyGameboard);
-      var lastAttack = computerUser.attackedCoordinates[computerUser.attackedCoordinates.length - 1];
-      var row = lastAttack[0];
-      var column = lastAttack[1];
-      if (enemyGameboard.grid[row][column]) {
-        var attackedShip = enemyGameboard.grid[lastAttack[0]][lastAttack[1]];
-        if (attackedShip.isVertical) {
-          for (var i = (attackedShip.length - 1) * -1; i < attackedShip.length; i++) {
-            if (i != 0 && row + i < 10 && row + i > -1 && !computerUser.attackedCoordinates.includes([row + i, column])) nextComputerAttack.push([row + i, column]);
-          }
-        } else {
-          for (var _i4 = (attackedShip.length - 1) * -1; _i4 < attackedShip.length; _i4++) {
-            if (_i4 != 0 && column + _i4 < 10 && column + _i4 > -1 && !computerUser.attackedCoordinates.includes([row, column + _i4])) nextComputerAttack.push([row, column + _i4]);
-          }
-        }
-      }
-    } else {
-      var nextAttack = nextComputerAttack.shift();
-      var nextAttackRow = nextAttack[0];
-      var nextAttackColumn = nextAttack[1];
-      computerUser.attackEnemy(nextAttackRow, nextAttackColumn, enemyGameboard);
-      if (enemyGameboard.grid[nextAttackRow][nextAttackColumn] && enemyGameboard.grid[nextAttackRow][nextAttackColumn].isSunk()) {
-        nextComputerAttack = [];
-      }
-    }
-    checkIfWinner(computerUser, enemyGameboard);
-  }
-  function checkIfWinner(currentUser, enemyGameboard) {
-    console.log(currentUser, enemyGameboard.name);
-    if (enemyGameboard.allSunk()) {
-      endGameDisplay(currentUser);
-    } else updateGameboardDisplay(currentUser, enemyGameboard);
-  }
-  return {
-    loadPlayingGameboards: loadPlayingGameboards
-  };
-};
-function updateGameboardDisplay(currentUser, enemyGameboard) {
-  var recentAttack = currentUser.attackedCoordinates[currentUser.attackedCoordinates.length - 1];
-  var row = recentAttack[0];
-  var column = recentAttack[1];
-  var playerGameboardCells = document.getElementById('player-gameboard').querySelectorAll('.square');
-  var computerGameboardCells = document.getElementById('computer-gameboard').querySelectorAll('.square');
-  var currentGameboardCells = currentUser.name === "Player" ? computerGameboardCells : playerGameboardCells;
-  currentGameboardCells.forEach(function (cell) {
-    var x = cell.getAttribute('data-x') * 1;
-    var y = cell.getAttribute('data-y') * 1;
-    if (x === row && y === column) {
-      if (enemyGameboard.grid[row][column]) cell.classList.add('hit-shot');else cell.classList.add('missed-shot');
-      return;
-    }
-  });
-}
-
-//  End Game Modal
-function endGameDisplay(winner) {
-  var endModal = document.getElementById('end-modal');
-  endModal.style.display = "flex";
-  var winningText = document.getElementById("winning-text");
-  winningText.textContent = "".concat(winner.name, " wins!");
-  var playingGameboards = document.querySelectorAll(".playing-gameboard");
-  playingGameboards.forEach(function (gameboard) {
-    gameboard.classList.add("disableCursor");
-  });
-  var resetButton = document.getElementById('reset-button');
-  resetButton.addEventListener('click', function () {
-    resetGame();
-    endModal.style.display = "none";
-    var playingScreen = document.getElementById('playing-screen');
-    playingScreen.style.display = "none";
-    playingGameboards.forEach(function (gameboard) {
-      gameboard.classList.remove("disableCursor");
-    });
-  });
-}
-function resetGame() {
-  playerStorage = [];
-  gameboardStorage = [];
-  var startingGameboard = document.getElementById('starting-gameboard');
-  startingGameboard.remove();
-  startScreenFunctions();
-}
+(0,_js_game_startscreen__WEBPACK_IMPORTED_MODULE_2__.startScreenFunctions)();
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=main76354ba566357b948ba4.js.map
+//# sourceMappingURL=mainf6ac476563b45bae30c4.js.map
