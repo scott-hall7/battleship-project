@@ -123,7 +123,7 @@ function toggleRotateButton(ship)   {
     const rotateButton = document.createElement('button');
     rotateButton.id = "rotate-button";
     rotateButton.classList.add('button');
-    rotateButton.textContent = "Rotate Button";
+    rotateButton.textContent = "Rotate Ship";
     rotateButton.addEventListener('click', () =>    {
         rotateCurrentShip(ship);
     });
