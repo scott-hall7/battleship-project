@@ -460,7 +460,7 @@ function toggleRotateButton(ship) {
   var rotateButton = document.createElement('button');
   rotateButton.id = "rotate-button";
   rotateButton.classList.add('button');
-  rotateButton.textContent = "Rotate Button";
+  rotateButton.textContent = "Rotate Ship";
   rotateButton.addEventListener('click', function () {
     rotateCurrentShip(ship);
   });
@@ -1289,4 +1289,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=main6bf69a9a7ae6a0fb757b.js.map
+//# sourceMappingURL=main2b8b4d36ff6095f6d77c.js.map
