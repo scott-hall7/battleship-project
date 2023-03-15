@@ -25,6 +25,11 @@ body {
     margin-top: 30px;
 }
 
+main{
+    display: flex;
+    justify-content: center;
+}
+
 header  {
     font-size: 5rem;
     font-family:'MyFont', 'Courier New', Courier, monospace;
@@ -119,3 +124,20 @@ header  {
 .disableCursor {
     pointer-events: none;
 }
+
+@media only screen and (max-width: 400px) {
+    .gameboard  {
+        display: grid;
+        grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+        border: 1px solid black;
+        height: 300px;
+        width: 300px;
+    }
+    #playing-screen   {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+    }
+  }
