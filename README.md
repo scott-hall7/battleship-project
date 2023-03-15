@@ -9,3 +9,7 @@
 - Ability to place ships at specific locations.
 - Ability to reset game after winning.
 - Implemented a way for the computer player to make smart moves, insteaf of randomly choosing spaces.   
+
+## Deployment
+
+[Deployment](https://scott-hall7.github.io/battleship-project/)
